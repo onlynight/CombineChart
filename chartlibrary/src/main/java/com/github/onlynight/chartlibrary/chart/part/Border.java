@@ -1,19 +1,49 @@
 package com.github.onlynight.chartlibrary.chart.part;
 
 import android.graphics.Color;
+import android.graphics.PointF;
 
 /**
  * Created by lion on 2017/8/11.
+ * the chart's border part
  */
 
 public class Border {
 
+    /**
+     * border line width
+     */
     private float mWidth = 1f;
+
+    /**
+     * border line color
+     */
     private int mColor = Color.BLACK;
 
+    /**
+     * border's position
+     */
+    private PointF topLeft;
+    private PointF bottomRight;
+
+    /**
+     * has the left border
+     */
     private boolean hasLeft = true;
+
+    /**
+     * has the top border
+     */
     private boolean hasTop = true;
+
+    /**
+     * has the right border
+     */
     private boolean hasRight = true;
+
+    /**
+     * has the bottom border
+     */
     private boolean hasBottom = true;
 
     public boolean isHasLeft() {
@@ -62,5 +92,21 @@ public class Border {
 
     public void setColor(int color) {
         this.mColor = color;
+    }
+
+    public PointF getTopLeft() {
+        return topLeft;
+    }
+
+    public void setTopLeft(PointF topLeft) {
+        this.topLeft = topLeft;
+    }
+
+    public PointF getBottomRight() {
+        return bottomRight;
+    }
+
+    public void setBottomRight(PointF bottomRight) {
+        this.bottomRight = bottomRight;
     }
 }

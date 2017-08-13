@@ -2,6 +2,7 @@ package com.github.onlynight.chartlibrary.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.text.TextUtils;
 
 import com.github.onlynight.chartlibrary.chart.part.Axis;
@@ -18,27 +19,67 @@ import java.util.List;
 
 public abstract class BaseChart<T extends BaseChartData> {
 
+    /**
+     * graph paint
+     */
     protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    /**
+     * text paint
+     */
     protected Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+    /**
+     * common blank
+     */
     public static final int BLANK = 5;
 
+    /**
+     * chart area
+     */
     protected int mLeft;
     protected int mTop;
     protected int mRight;
     protected int mBottom;
 
+    /**
+     * chart size
+     */
     private int mWidth;
     private int mHeight;
 
+    /**
+     * axis
+     */
     protected Axis mXAxis;
     protected Axis mYAxis;
+
+    /**
+     * chart border
+     */
     protected Border mBorder;
 
-    protected List<T> mDataList;
-    private boolean mIsAlignYAxis = true;
-
+    /**
+     * chart weight
+     */
     private double mWeight = 1d;
+
+    /**
+     * chart top or bottom margin text size,
+     * <p>
+     * it will use for top ro bottom margin.
+     */
+    private double mMarginTextSize = 20;
+
+    /**
+     * chart data list
+     */
+    protected List<T> mDataList;
+
+    /**
+     * is this chart align other chart y axis.
+     */
+    private boolean mIsAlignYAxis = true;
 
     public BaseChart() {
         this.mBorder = new Border();
@@ -49,11 +90,6 @@ public abstract class BaseChart<T extends BaseChartData> {
         this.mDataList = new ArrayList<>();
     }
 
-    public void onDraw(Canvas canvas) {
-        drawBorder(canvas);
-        drawAxis(canvas);
-    }
-
     public double getWeight() {
         return mWeight;
     }
@@ -62,47 +98,134 @@ public abstract class BaseChart<T extends BaseChartData> {
         this.mWeight = weight;
     }
 
+    /**
+     * on measure chart part proc
+     *
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        measureBorder();
+        measureAxis();
+    }
+
+    protected void measureBorder() {
+        float halfBorder = mBorder.getWidth() / 2;
+        PointF topLeft = new PointF(mLeft + halfBorder, mTop + halfBorder);
+        PointF bottomRight = new PointF(mRight - halfBorder, mBottom - halfBorder);
+        mBorder.setTopLeft(topLeft);
+        mBorder.setBottomRight(bottomRight);
+    }
+
+    protected void measureAxis() {
+        measureYAxis();
+        measureXAxis();
+    }
+
+    protected void measureYAxis() {
+        mTextPaint.setTextSize(mYAxis.getTextSize());
+        mGraphPaint.setStrokeWidth(mYAxis.getWidth());
+
+        String max = getYAxisTextMaxLength(mDataList);
+        float scaleMaxWidth = mTextPaint.measureText(max);
+
+        float x = 0;
+
+        switch (mYAxis.getPosition()) {
+            case Axis.POSITION_RIGHT:
+                x = mRight - (scaleMaxWidth + BLANK * 2);
+                mXAxis.getStartPos().x = 0;
+                mXAxis.getEndPos().x = x;
+                break;
+            case Axis.POSITION_LEFT:
+            default:
+                x = scaleMaxWidth + BLANK * 2;
+                mXAxis.getStartPos().x = x;
+                mXAxis.getEndPos().x = mRight;
+                break;
+        }
+
+        mYAxis.getStartPos().x = x;
+        mYAxis.getEndPos().x = x;
+    }
+
+    protected void measureXAxis() {
+        mTextPaint.setTextSize(mXAxis.getTextSize());
+        mGraphPaint.setStrokeWidth(mXAxis.getWidth());
+
+        float fontHeight = getFontHeight(mTextPaint);
+
+        float y = 0;
+
+        switch (mXAxis.getPosition()) {
+            case Axis.POSITION_BOTTOM:
+                y = mBottom - (fontHeight * BLANK * 2);
+                mYAxis.getStartPos().y = mTop + mBorder.getWidth() / 2;
+                mYAxis.getEndPos().y = y;
+            default:
+                break;
+            case Axis.POSITION_TOP:
+                y = mTop + fontHeight * BLANK * 2;
+                mYAxis.getStartPos().y = y;
+                mYAxis.getEndPos().y = mBottom - mBorder.getWidth() / 2;
+                break;
+        }
+
+        mXAxis.getStartPos().y = y;
+        mXAxis.getEndPos().y = y;
+    }
+
+    /**
+     * on draw chart part proc
+     *
+     * @param canvas
+     */
+    public void onDraw(Canvas canvas) {
+        drawBorder(canvas);
+        drawAxis(canvas);
+//        drawAxis(canvas);
+    }
+
     private void drawBorder(Canvas canvas) {
         mGraphPaint.setColor(mBorder.getColor());
         mGraphPaint.setStrokeWidth(mBorder.getWidth());
         mGraphPaint.setStyle(Paint.Style.STROKE);
 
-        float halfBorder = mBorder.getWidth() / 2;
-//        canvas.drawRect(mLeft + halfBorder, mTop + halfBorder, mRight - halfBorder,
-//                mBottom - halfBorder, mGraphPaint);
-
-        if (mBorder.isHasTop()) {
-            canvas.drawLine(mLeft + halfBorder, mTop + halfBorder,
-                    mRight - halfBorder, mTop + halfBorder, mGraphPaint);
+        if (mBorder.isHasLeft()) {
+            canvas.drawLine(mBorder.getTopLeft().x, mBorder.getTopLeft().y,
+                    mBorder.getTopLeft().x, mBorder.getBottomRight().y, mGraphPaint);
         }
 
-        if (mBorder.isHasLeft()) {
-            canvas.drawLine(mLeft + halfBorder, mTop + halfBorder,
-                    mLeft + halfBorder, mBottom - halfBorder, mGraphPaint);
+        if (mBorder.isHasTop()) {
+            canvas.drawLine(mBorder.getTopLeft().x, mBorder.getTopLeft().y,
+                    mBorder.getBottomRight().x, mBorder.getTopLeft().y, mGraphPaint);
         }
 
         if (mBorder.isHasRight()) {
-            canvas.drawLine(mRight - halfBorder, mTop + halfBorder,
-                    mRight - halfBorder, mBottom - halfBorder, mGraphPaint);
+            canvas.drawLine(mBorder.getBottomRight().x, mBorder.getTopLeft().y,
+                    mBorder.getBottomRight().x, mBorder.getBottomRight().y, mGraphPaint);
         }
 
         if (mBorder.isHasBottom()) {
-            canvas.drawLine(mLeft + halfBorder, mBottom - halfBorder,
-                    mRight - halfBorder, mBottom - halfBorder, mGraphPaint);
+            canvas.drawLine(mBorder.getTopLeft().x, mBorder.getBottomRight().y,
+                    mBorder.getBottomRight().x, mBorder.getBottomRight().y, mGraphPaint);
         }
     }
 
     private void drawAxis(Canvas canvas) {
-        String max = getYAxisTextMaxLength(mDataList);
-        mGraphPaint.setTextSize(mYAxis.getTextSize());
-        mGraphPaint.setStyle(Paint.Style.STROKE);
-        float left = mGraphPaint.measureText(max);
-//        mGraphPaint.setTextSize(mXAxis.getTextSize());
-        float bottom = getFontHeight(mGraphPaint);
-        drawXAxisLine(canvas);
-        drawYAxisLine(canvas, left);
-        drawYAxisText(canvas, left, bottom);
     }
+
+//    private void drawAxis(Canvas canvas) {
+//        String max = getYAxisTextMaxLength(mDataList);
+//        mGraphPaint.setTextSize(mYAxis.getTextSize());
+//        mGraphPaint.setStyle(Paint.Style.STROKE);
+//        float left = mGraphPaint.measureText(max);
+////        mGraphPaint.setTextSize(mXAxis.getTextSize());
+//        float bottom = getFontHeight(mGraphPaint);
+//        drawXAxisLine(canvas);
+//        drawYAxisLine(canvas, left);
+//        drawYAxisText(canvas, left, bottom);
+//    }
 
     private void drawXAxisLine(Canvas canvas) {
         mGraphPaint.setTextSize(mXAxis.getTextSize());
@@ -240,5 +363,13 @@ public abstract class BaseChart<T extends BaseChartData> {
     public float getFontHeight(Paint paint) {
         Paint.FontMetrics fm = paint.getFontMetrics();
         return (fm.descent - fm.ascent) / 3 * 2;
+    }
+
+    public double getMarginTextSize() {
+        return mMarginTextSize;
+    }
+
+    public void setMarginTextSize(double marginTextSize) {
+        this.mMarginTextSize = marginTextSize;
     }
 }

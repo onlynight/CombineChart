@@ -39,9 +39,6 @@ public class CombineChartView extends View {
     }
 
     public void addChart(BaseChart chart) {
-//        Border border = new Border();
-//        border.setWidth(100);
-//        chart.setBorder(border);
         mCharts.add(chart);
     }
 
@@ -82,6 +79,14 @@ public class CombineChartView extends View {
         }
 
         return total;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        for (BaseChart chart : mCharts) {
+            chart.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.github.onlynight.chartlibrary.render.LineChartRender;
 
 /**
  * Created by lion on 2017/8/11.
+ * line chart
  */
 
 public class LineChart extends BaseChart<LineChartData> {

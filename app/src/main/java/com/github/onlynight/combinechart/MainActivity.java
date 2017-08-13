@@ -4,9 +4,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.onlynight.chartlibrary.chart.LineChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
-import com.github.onlynight.chartlibrary.chart.LineChart;
 import com.github.onlynight.chartlibrary.data.LineChartData;
 import com.github.onlynight.chartlibrary.data.config.LineChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.LineEntity;
@@ -29,13 +29,6 @@ public class MainActivity extends AppCompatActivity {
         mCombineChartView.addChart(generateLineChart());
         mCombineChartView.addChart(generateLineChart1());
         mCombineChartView.addChart(generateLineChart2());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
-//        mCombineChartView.addChart(generateLineChart());
     }
 
     private List<LineEntity> generateLineEntities() {
@@ -88,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         Border border = lineChart.getBorder();
         border.setWidth(1);
         border.setHasBottom(false);
+        border.setHasRight(false);
         border.setColor(Color.GRAY);
 
         return lineChart;
@@ -116,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         Border border = lineChart.getBorder();
         border.setWidth(1);
         border.setHasBottom(false);
+        border.setHasRight(false);
         border.setColor(Color.GRAY);
 
         return lineChart;
@@ -143,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         Border border = lineChart.getBorder();
         border.setWidth(1);
-//        border.setHasBottom(false);
+        border.setHasRight(false);
         border.setColor(Color.GRAY);
 
         return lineChart;
