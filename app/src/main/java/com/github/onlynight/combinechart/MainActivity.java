@@ -66,17 +66,17 @@ public class MainActivity extends AppCompatActivity {
 
         Axis y = lineChart.getyAxis();
         y.setPosition(Axis.POSITION_LEFT);
-        y.setColor(Color.GRAY);
+        y.setColor(Color.RED);
         y.setWidth(1);
         y.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        y.setTextColor(Color.GRAY);
+        y.setTextColor(Color.RED);
 
         Axis x = lineChart.getxAxis();
         x.setPosition(Axis.POSITION_TOP);
-        x.setColor(Color.GRAY);
+        x.setColor(Color.RED);
         x.setWidth(1);
         x.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        x.setTextColor(Color.GRAY);
+        x.setTextColor(Color.RED);
 
         Border border = lineChart.getBorder();
         border.setWidth(1);
@@ -95,17 +95,17 @@ public class MainActivity extends AppCompatActivity {
 
         Axis y = lineChart.getyAxis();
         y.setPosition(Axis.POSITION_LEFT);
-        y.setColor(Color.GRAY);
+        y.setColor(Color.RED);
         y.setWidth(1);
         y.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        y.setTextColor(Color.GRAY);
+        y.setTextColor(Color.RED);
 
         Axis x = lineChart.getxAxis();
         x.setPosition(Axis.POSITION_TOP);
-        x.setColor(Color.GRAY);
+        x.setColor(Color.RED);
         x.setWidth(1);
         x.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        x.setTextColor(Color.GRAY);
+        x.setTextColor(Color.RED);
 
         Border border = lineChart.getBorder();
         border.setWidth(1);
@@ -124,17 +124,17 @@ public class MainActivity extends AppCompatActivity {
 
         Axis y = lineChart.getyAxis();
         y.setPosition(Axis.POSITION_LEFT);
-        y.setColor(Color.GRAY);
+        y.setColor(Color.RED);
         y.setWidth(1);
         y.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        y.setTextColor(Color.GRAY);
+        y.setTextColor(Color.RED);
 
         Axis x = lineChart.getxAxis();
         x.setPosition(Axis.POSITION_TOP);
-        x.setColor(Color.GRAY);
+        x.setColor(Color.RED);
         x.setWidth(1);
         x.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        x.setTextColor(Color.GRAY);
+        x.setTextColor(Color.RED);
 
         Border border = lineChart.getBorder();
         border.setWidth(1);

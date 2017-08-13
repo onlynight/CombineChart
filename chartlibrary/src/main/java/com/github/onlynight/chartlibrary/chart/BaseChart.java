@@ -1,7 +1,9 @@
 package com.github.onlynight.chartlibrary.chart;
 
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.text.TextUtils;
 
@@ -213,6 +215,26 @@ public abstract class BaseChart<T extends BaseChartData> {
     }
 
     private void drawAxis(Canvas canvas) {
+
+        if (mYAxis.isHasLine()) {
+            mGraphPaint.setStrokeWidth(mYAxis.getWidth());
+            mGraphPaint.setColor(mYAxis.getColor());
+            mGraphPaint.setStyle(Paint.Style.STROKE);
+
+            switch (mYAxis.getLineType()) {
+                case Axis.AXIS_LINE_TYPE_DASH:
+                    PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
+                    mGraphPaint.setPathEffect(effects);
+                    break;
+                case Axis.AXIS_LINE_TYPE_SOLID:
+                default:
+                    // TODO: 2017/8/14
+                    break;
+            }
+
+            canvas.drawLine(mYAxis.getStartPos().x, mYAxis.getStartPos().y,
+                    mYAxis.getEndPos().x, mXAxis.getEndPos().y, mGraphPaint);
+        }
     }
 
 //    private void drawAxis(Canvas canvas) {
