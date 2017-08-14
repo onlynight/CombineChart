@@ -16,21 +16,28 @@ public class LineChart extends BaseChart<LineChartData> {
 
     public LineChart() {
         super();
-        mLineChartRender = new LineChartRender();
+        mLineChartRender = new LineChartRender(this);
     }
 
     @Override
-    public void setArea(int left, int top, int right, int bottom) {
-        super.setArea(left, top, right, bottom);
-        float halfBorder = mBorder.getWidth() / 2;
-        mLineChartRender.setArea((int) (left + halfBorder), (int) (top + halfBorder),
-                (int) (right - halfBorder), (int) (bottom - halfBorder));
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        mLineChartRender.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         mLineChartRender.onDraw(canvas);
     }
 
+    @Override
+    public void setScale(float mScale) {
+        super.setScale(mScale);
+        mLineChartRender.setScale(mScale);
+    }
+
+    @Override
+    public void setxDelta(float xDelta) {
+        super.setxDelta(xDelta);
+        mLineChartRender.setxDelta(xDelta);
+    }
 }

@@ -36,8 +36,8 @@ public class Axis {
     /**
      * axis line type solid or dash.
      */
-    public static final int AXIS_LINE_TYPE_SOLID = 0;
-    public static final int AXIS_LINE_TYPE_DASH = 1;
+    public static final int LINE_TYPE_SOLID = 0;
+    public static final int LINE_TYPE_DASH = 1;
 
     /**
      * axis line width
@@ -52,7 +52,7 @@ public class Axis {
     /**
      * axis line type
      */
-    private int mLineType = AXIS_LINE_TYPE_SOLID;
+    private int mLineType = LINE_TYPE_SOLID;
 
     /**
      * if the axis has the line
@@ -77,7 +77,27 @@ public class Axis {
     /**
      * grid size
      */
-    private int mMaxGrid = 4; // 0 is null, more than 0 is specific value.
+    private int mGrid = 4; // 0 is null, more than 0 is specific value.
+
+    /**
+     * scale line width
+     */
+    private float mScaleLineWidth = 0.5f;
+
+    /**
+     * scale line type
+     */
+    private int mScaleLineType = LINE_TYPE_DASH;
+
+    /**
+     * scale line color
+     */
+    private int mScaleLineColor = Color.BLACK;
+
+    /**
+     * scale has line
+     */
+    private boolean mHasScaleLine = true;
 
     /**
      * axis' position
@@ -164,12 +184,12 @@ public class Axis {
         this.mHasGrid = hasGrid;
     }
 
-    public int getMaxGrid() {
-        return mMaxGrid;
+    public int getGrid() {
+        return mGrid;
     }
 
-    public void setMaxGrid(int maxGrid) {
-        this.mMaxGrid = maxGrid;
+    public void setGrid(int maxGrid) {
+        this.mGrid = maxGrid;
     }
 
     public int getTextGravity() {
@@ -208,6 +228,8 @@ public class Axis {
         if (mScales == null) {
             mScales = new ArrayList<>();
         }
+
+        mScales.add(scale);
     }
 
     public PointF getStartPos() {
@@ -226,4 +248,35 @@ public class Axis {
         this.mEndPos = endPos;
     }
 
+    public float getScaleLineWidth() {
+        return mScaleLineWidth;
+    }
+
+    public void setScaleLineWidth(float scaleLineWidth) {
+        this.mScaleLineWidth = scaleLineWidth;
+    }
+
+    public int getScaleLineType() {
+        return mScaleLineType;
+    }
+
+    public void setScaleLineType(int scaleLineType) {
+        this.mScaleLineType = scaleLineType;
+    }
+
+    public int getScaleLineColor() {
+        return mScaleLineColor;
+    }
+
+    public void setScaleLineColor(int scaleLineColor) {
+        this.mScaleLineColor = scaleLineColor;
+    }
+
+    public boolean isHasScaleLine() {
+        return mHasScaleLine;
+    }
+
+    public void setHasScaleLine(boolean hasScaleLine) {
+        this.mHasScaleLine = hasScaleLine;
+    }
 }

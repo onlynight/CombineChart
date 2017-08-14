@@ -9,9 +9,6 @@ public class BaseEntity {
     private double mX;
     private double mY;
 
-    private double mYMin;
-    private double mYMax;
-
     private String mXValue;
     private String mYValue;
 
@@ -47,19 +44,4 @@ public class BaseEntity {
         this.mYValue = yValue;
     }
 
-    public double getyMin() {
-        return mYMin;
-    }
-
-    public void setyMin(double min) {
-        this.mYMin = min;
-    }
-
-    public double getyMax() {
-        return mYMax;
-    }
-
-    public void setyMax(double max) {
-        this.mYMax = max;
-    }
 }
