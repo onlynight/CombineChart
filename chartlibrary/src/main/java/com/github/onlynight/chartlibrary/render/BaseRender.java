@@ -27,12 +27,14 @@ public abstract class BaseRender<T extends BaseChartData> {
     protected Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     protected BaseChart mChart;
+    protected Path mContainerPath;
 
     protected float mScale = 1f;
     protected float xDelta = 0;
 
     public BaseRender(BaseChart chart) {
         this.mChart = chart;
+        this.mContainerPath = new Path();
     }
 
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -45,6 +47,9 @@ public abstract class BaseRender<T extends BaseChartData> {
         drawBorder(canvas);
         drawAxis(canvas);
         drawAxisScale(canvas);
+    }
+
+    public void onDrawChart(Canvas canvas) {
     }
 
     protected void measureBorder() {
