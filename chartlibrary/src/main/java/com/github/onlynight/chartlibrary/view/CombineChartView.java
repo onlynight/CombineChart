@@ -18,6 +18,8 @@ import java.util.List;
 public class CombineChartView extends View {
 
     private List<BaseChart> mCharts;
+    private float mScale = 1f;
+    private float xDelta = 0;
 
     public CombineChartView(Context context) {
         super(context);
@@ -94,6 +96,28 @@ public class CombineChartView extends View {
         super.onDraw(canvas);
         for (BaseChart chart : mCharts) {
             chart.onDraw(canvas);
+        }
+    }
+
+    public float getScale() {
+        return mScale;
+    }
+
+    public void setScale(float mScale) {
+        this.mScale = mScale;
+        for (BaseChart chart : mCharts) {
+            chart.setScale(mScale);
+        }
+    }
+
+    public float getxDelta() {
+        return xDelta;
+    }
+
+    public void setxDelta(float xDelta) {
+        this.xDelta = xDelta;
+        for (BaseChart chart : mCharts) {
+            chart.setxDelta(xDelta);
         }
     }
 }

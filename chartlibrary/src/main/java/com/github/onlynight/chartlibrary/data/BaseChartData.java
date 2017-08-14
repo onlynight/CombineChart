@@ -15,6 +15,25 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
     protected List<Entity> mData;
     protected Config mConfig;
 
+    protected double mYMin;
+    protected double mYMax;
+
+    public double getYMin() {
+        return mYMin;
+    }
+
+    public void setYMin(double YMin) {
+        this.mYMin = YMin;
+    }
+
+    public double getYMax() {
+        return mYMax;
+    }
+
+    public void setYMax(double YMax) {
+        this.mYMax = YMax;
+    }
+
     public List<Entity> getData() {
         return mData;
     }

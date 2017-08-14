@@ -10,15 +10,9 @@ import android.graphics.PointF;
 public class Scale {
 
     /**
-     * scale vertical line type
-     */
-    public static final int SCALE_LINE_TYPE_SOLID = 0;
-    public static final int SCALE_LINE_TYPE_DASH = 1;
-
-    /**
      * scale text content
      */
-    private String scaleText;
+    private String scaleText = "0.00";
 
     /**
      * scale text draw position
@@ -36,43 +30,9 @@ public class Scale {
     private PointF endPos;
 
     /**
-     * scale line width
-     */
-    private float scaleLineWidth = 1;
-
-    /**
-     * scale line type
-     */
-    private int scaleLineType = SCALE_LINE_TYPE_SOLID;
-
-    /**
      * has scale line
      */
     private boolean hasLine = true;
-
-    public boolean isHasLine() {
-        return hasLine;
-    }
-
-    public void setHasLine(boolean hasLine) {
-        this.hasLine = hasLine;
-    }
-
-    public float getScaleLineWidth() {
-        return scaleLineWidth;
-    }
-
-    public void setScaleLineWidth(float scaleLineWidth) {
-        this.scaleLineWidth = scaleLineWidth;
-    }
-
-    public int getScaleLineType() {
-        return scaleLineType;
-    }
-
-    public void setScaleLineType(int scaleLineType) {
-        this.scaleLineType = scaleLineType;
-    }
 
     public String getScaleText() {
         return scaleText;
@@ -104,5 +64,13 @@ public class Scale {
 
     public void setEndPos(PointF endPos) {
         this.endPos = endPos;
+    }
+
+    public boolean isHasLine() {
+        return hasLine;
+    }
+
+    public void setHasLine(boolean hasLine) {
+        this.hasLine = hasLine;
     }
 }
