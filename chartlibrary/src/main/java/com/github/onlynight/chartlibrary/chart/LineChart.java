@@ -30,6 +30,11 @@ public class LineChart extends BaseChart<LineChartData> {
     }
 
     @Override
+    public void onDrawChart(Canvas canvas) {
+        mLineChartRender.onDrawChart(canvas);
+    }
+
+    @Override
     public void setScale(float mScale) {
         super.setScale(mScale);
         mLineChartRender.setScale(mScale);

@@ -3,6 +3,7 @@ package com.github.onlynight.chartlibrary.render;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.Region;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
@@ -29,9 +30,26 @@ public class LineChartRender extends BaseRender<LineChartData> {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    public void onDrawChart(Canvas canvas) {
+        super.onDrawChart(canvas);
+        clipContainer(canvas);
         drawLine(canvas);
+    }
+
+    private void clipContainer(Canvas canvas) {
+        List<Scale> scales = mChart.getyAxis().getScales();
+        if (scales != null && scales.size() > 0) {
+            mContainerPath.reset();
+//            canvas.clipPath(mContainerPath);
+//            mContainerPath.addCircle(mChart.getWidth() / 2, mChart.getHeight() / 2,
+//                    mChart.getWidth() / 2, Path.Direction.CCW);
+            float startX = scales.get(0).getStartPos().x;
+            float startY = scales.get(0).getStartPos().y;
+            float endX = scales.get(scales.size() - 1).getEndPos().x;
+            float endY = scales.get(scales.size() - 1).getEndPos().y;
+            mContainerPath.addRect(startX, startY, endX, endY, Path.Direction.CCW);
+            canvas.clipPath(mContainerPath, Region.Op.REPLACE);//Region.Op.REPLACE
+        }
     }
 
     private void drawLine(Canvas canvas) {
@@ -53,20 +71,24 @@ public class LineChartRender extends BaseRender<LineChartData> {
         List<LineEntity> entities = data.getData();
         Path path = new Path();
         PointF ptf = calculateChartPos(entities, 0);
-        path.moveTo(ptf.x, ptf.y);
-        for (int i = 0; i < entities.size(); i++) {
-            PointF temp = calculateChartPos(entities, i);
-            path.lineTo(temp.x, temp.y);
-        }
+        if (ptf != null) {
+            path.moveTo(ptf.x, ptf.y);
+            for (int i = 0; i < entities.size(); i++) {
+                PointF temp = calculateChartPos(entities, i);
+                if (temp != null) {
+                    path.lineTo(temp.x, temp.y);
+                }
+            }
 
-        LineChartDataConfig config = data.getConfig();
-        if (config != null) {
-            mGraphPaint.setStrokeWidth(config.getStrokeWidth());
-            mGraphPaint.setColor(config.getColor());
-            mGraphPaint.setPathEffect(null);
-        }
+            LineChartDataConfig config = data.getConfig();
+            if (config != null) {
+                mGraphPaint.setStrokeWidth(config.getStrokeWidth());
+                mGraphPaint.setColor(config.getColor());
+                mGraphPaint.setPathEffect(null);
+            }
 
-        canvas.drawPath(path, mGraphPaint);
+            canvas.drawPath(path, mGraphPaint);
+        }
     }
 
     private PointF calculateChartPos(List<LineEntity> entities, int index) {

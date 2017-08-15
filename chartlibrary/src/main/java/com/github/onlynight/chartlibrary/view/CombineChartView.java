@@ -97,6 +97,10 @@ public class CombineChartView extends View {
         for (BaseChart chart : mCharts) {
             chart.onDraw(canvas);
         }
+
+        for (BaseChart chart : mCharts) {
+            chart.onDrawChart(canvas);
+        }
     }
 
     public float getScale() {

@@ -95,6 +95,8 @@ public abstract class BaseChart<T extends BaseChartData> {
      */
     public abstract void onDraw(Canvas canvas);
 
+    public abstract void onDrawChart(Canvas canvas);
+
     public int getLeft() {
         return mLeft;
     }
