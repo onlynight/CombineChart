@@ -6,6 +6,8 @@ import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
+import com.github.onlynight.chartlibrary.operate.IChartInterface;
+import com.github.onlynight.chartlibrary.render.BaseRender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,8 @@ import java.util.List;
  * Created by lion on 2017/8/11.
  */
 
-public abstract class BaseChart<T extends BaseChartData> {
+public abstract class BaseChart<T extends BaseChartData, Render extends BaseRender<T>> implements
+        IChartInterface {
 
     /**
      * common blank
@@ -63,13 +66,17 @@ public abstract class BaseChart<T extends BaseChartData> {
      */
     protected List<T> mDataList;
 
+    protected Render mRender;
+
     /**
      * is this chart align other chart y axis.
      */
     private boolean mIsAlignYAxis = true;
 
-    protected float mScale = 1f;
-    protected float xDelta = 0;
+    /**
+     * y axis max length text
+     */
+    private String mMaxYAxisScaleText = "";
 
     public BaseChart() {
         this.mBorder = new Border();
@@ -78,24 +85,46 @@ public abstract class BaseChart<T extends BaseChartData> {
         this.mXAxis = new Axis();
         this.mXAxis.setPosition(Axis.POSITION_BOTTOM);
         this.mDataList = new ArrayList<>();
+        this.mRender = createChartRender();
     }
 
     /**
      * on measure chart part proc
-     *
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
      */
-    public abstract void onMeasure(int widthMeasureSpec, int heightMeasureSpec);
+    public void onMeasure() {
+        if (mRender != null) {
+            mRender.onMeasure();
+        }
+    }
 
     /**
      * on draw chart part proc
      *
      * @param canvas
      */
-    public abstract void onDraw(Canvas canvas);
+    public void onDraw(Canvas canvas) {
+        if (mRender != null) {
+            mRender.onDraw(canvas);
+        }
+    }
 
-    public abstract void onDrawChart(Canvas canvas);
+    /**
+     * draw chart data, exclude frame of the chart
+     *
+     * @param canvas
+     */
+    public void onDrawChart(Canvas canvas) {
+        if (mRender != null) {
+            mRender.onDrawChart(canvas);
+        }
+    }
+
+    /**
+     * create chart render
+     *
+     * @return
+     */
+    protected abstract Render createChartRender();
 
     public int getLeft() {
         return mLeft;
@@ -182,10 +211,10 @@ public abstract class BaseChart<T extends BaseChartData> {
         }
     }
 
-    private double setExtremeValue(T data) {
+    protected void setExtremeValue(T data) {
         if (data != null) {
             double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
-            for (Object obj : data.getData()) {
+            for (Object obj : data.getShowData()) {
                 if (obj instanceof BaseEntity) {
                     double y = ((BaseEntity) obj).getY();
                     if (max < y) {
@@ -200,7 +229,6 @@ public abstract class BaseChart<T extends BaseChartData> {
             data.setYMax(max);
             data.setYMin(min);
         }
-        return 0;
     }
 
     public void clearData() {
@@ -235,19 +263,46 @@ public abstract class BaseChart<T extends BaseChartData> {
         return BLANK;
     }
 
+    @Override
     public float getScale() {
-        return mScale;
+        if (mRender != null) {
+            mRender.getScale();
+        }
+        return 1;
     }
 
+    @Override
     public void setScale(float mScale) {
-        this.mScale = mScale;
+        if (mRender != null) {
+            mRender.setScale(mScale);
+        }
     }
 
+    @Override
     public float getxDelta() {
-        return xDelta;
+        if (mRender != null) {
+            mRender.getxDelta();
+        }
+        return 0;
     }
 
+    @Override
     public void setxDelta(float xDelta) {
-        this.xDelta = xDelta;
+        if (mRender != null) {
+            mRender.setxDelta(xDelta);
+        }
+    }
+
+    /**
+     * generate static y axis scale text
+     *
+     * @return if is null or is "" then it will measure the max text width
+     */
+    public String generateMaxLengthYAxisScaleText() {
+        return mMaxYAxisScaleText;
+    }
+
+    public void setMaxYAxisScaleText(String maxYAxisScaleText) {
+        this.mMaxYAxisScaleText = maxYAxisScaleText;
     }
 }

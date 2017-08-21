@@ -13,10 +13,45 @@ import java.util.List;
 public abstract class BaseChartData<Entity extends BaseEntity, Config extends BaseChartDataConfig> {
 
     protected List<Entity> mData;
+    protected List<Entity> mShowData;
     protected Config mConfig;
 
     protected double mYMin;
     protected double mYMax;
+
+    public BaseChartData() {
+    }
+
+    public BaseChartData(List<Entity> data) {
+        this.mData = data;
+    }
+
+    public BaseChartData(Config config) {
+        this.mConfig = config;
+    }
+
+    public List<Entity> getShowData() {
+        return mShowData;
+    }
+
+    public void setShowData(List<Entity> showData) {
+        this.mShowData = showData;
+        DecimalFormat xdf = new DecimalFormat(mConfig.getXFormat());
+        DecimalFormat ydf = new DecimalFormat(mConfig.getYFormat());
+        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+        for (Entity entity : mShowData) {
+            if (entity.getY() < min) {
+                min = entity.getY();
+            }
+
+            if (entity.getY() > max) {
+                max = entity.getY();
+            }
+
+            entity.setxValue(xdf.format(entity.getX()));
+            entity.setyValue(ydf.format(entity.getY()));
+        }
+    }
 
     public double getYMin() {
         return mYMin;
@@ -40,21 +75,7 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
 
     public void setData(List<Entity> data) {
         this.mData = data;
-        DecimalFormat xdf = new DecimalFormat(mConfig.getXFormat());
-        DecimalFormat ydf = new DecimalFormat(mConfig.getYFormat());
-        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (Entity entity : data) {
-            if (entity.getY() < min) {
-                min = entity.getY();
-            }
-
-            if (entity.getY() > max) {
-                max = entity.getY();
-            }
-
-            entity.setxValue(xdf.format(entity.getX()));
-            entity.setyValue(ydf.format(entity.getY()));
-        }
+        setShowData(data);
     }
 
     public Config getConfig() {

@@ -9,6 +9,16 @@ public class CandleStickChartDataConfig extends BaseChartDataConfig {
     private int decreasingColor;
     private int increasingColor;
 
+    private int mBarWidth;
+
+    public int getBarWidth() {
+        return mBarWidth;
+    }
+
+    public void setBarWidth(int barWidth) {
+        this.mBarWidth = barWidth;
+    }
+
     public int getDecreasingColor() {
         return decreasingColor;
     }

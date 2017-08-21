@@ -6,13 +6,16 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.PointF;
+import android.graphics.Region;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Scale;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
+import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -21,7 +24,8 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public abstract class BaseRender<T extends BaseChartData> {
+public abstract class BaseRender<T extends BaseChartData> implements
+        IChartInterface {
 
     protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     protected Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -30,14 +34,14 @@ public abstract class BaseRender<T extends BaseChartData> {
     protected Path mContainerPath;
 
     protected float mScale = 1f;
-    protected float xDelta = 0;
+    protected float mXDelta = 0;
 
     public BaseRender(BaseChart chart) {
         this.mChart = chart;
         this.mContainerPath = new Path();
     }
 
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    public void onMeasure() {
         measureBorder();
         measureAxis();
         measureAxisScale();
@@ -50,6 +54,7 @@ public abstract class BaseRender<T extends BaseChartData> {
     }
 
     public void onDrawChart(Canvas canvas) {
+        clipContainer(canvas);
     }
 
     protected void measureBorder() {
@@ -139,19 +144,27 @@ public abstract class BaseRender<T extends BaseChartData> {
     }
 
     private String getYAxisTextMaxLength(List<T> dataList) {
-        if (dataList == null) {
-            return "";
+        String maxText = "0.0000";
+        if (mChart != null) {
+            maxText = mChart.generateMaxLengthYAxisScaleText();
         }
-
-        String max = "";
-        for (T data : dataList) {
-            String temp = getYAxisTextMaxLength(data);
-            if (temp.length() > max.length()) {
-                max = temp;
+        if (TextUtils.isEmpty(maxText)) {
+            if (dataList == null) {
+                return "0.0000";
             }
-        }
 
-        return max;
+            String max = "0.0000";
+            for (T data : dataList) {
+                String temp = getYAxisTextMaxLength(data);
+                if (temp.length() > max.length()) {
+                    max = temp;
+                }
+            }
+
+            return max;
+        } else {
+            return maxText;
+        }
     }
 
     private String getYAxisTextMaxLength(T chartData) {
@@ -202,6 +215,8 @@ public abstract class BaseRender<T extends BaseChartData> {
         double scaleValueBlank;
         double minYValue = getYMinValue();
         double maxYValue = getYMaxValue();
+
+        Log.i("maxYValue", "maxYValue = " + maxYValue);
 
         if (grid > 0) {
             blank = yAxisHeight / grid;
@@ -510,78 +525,101 @@ public abstract class BaseRender<T extends BaseChartData> {
 
     private void drawAxisScale(Canvas canvas) {
 
-        if (mChart.getyAxis().isHasScaleLine()) {
-            mGraphPaint.setStrokeWidth(mChart.getyAxis().getScaleLineWidth());
-            mGraphPaint.setColor(mChart.getyAxis().getScaleLineColor());
-            mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
-            mTextPaint.setColor(mChart.getyAxis().getTextColor());
+        mGraphPaint.setStrokeWidth(mChart.getyAxis().getScaleLineWidth());
+        mGraphPaint.setColor(mChart.getyAxis().getScaleLineColor());
+        mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
+        mTextPaint.setColor(mChart.getyAxis().getTextColor());
 
-            if (mChart.getyAxis().getScaleLineType() ==
-                    Axis.LINE_TYPE_DASH) {
-                PathEffect effects =
-                        new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
-                mGraphPaint.setPathEffect(effects);
-            } else {
-                mGraphPaint.setPathEffect(null);
-            }
-
-            for (Scale scale : mChart.getyAxis().getScales()) {
-                if (scale.isHasLine()) {
-                    Path path = new Path();
-                    path.moveTo(scale.getStartPos().x, scale.getStartPos().y);
-                    path.lineTo(scale.getEndPos().x, scale.getEndPos().y);
-                    canvas.drawPath(path, mGraphPaint);
-                }
-
-                if (mChart.getyAxis().isHasScaleText()) {
-                    canvas.drawText(scale.getScaleText(), scale.getScaleTextPos().x,
-                            scale.getScaleTextPos().y, mTextPaint);
-                }
-            }
+        if (mChart.getyAxis().getScaleLineType() ==
+                Axis.LINE_TYPE_DASH) {
+            PathEffect effects =
+                    new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
+            mGraphPaint.setPathEffect(effects);
+        } else {
+            mGraphPaint.setPathEffect(null);
         }
 
-        if (mChart.getxAxis().isHasScaleLine()) {
-            mGraphPaint.setStrokeWidth(mChart.getxAxis().getScaleLineWidth());
-            mGraphPaint.setColor(mChart.getxAxis().getScaleLineColor());
+        boolean hasScaleLine = mChart.getyAxis().isHasScaleLine();
+        boolean hasScaleText = mChart.getyAxis().isHasScaleText();
 
-            if (mChart.getxAxis().getScaleLineType() ==
-                    Axis.LINE_TYPE_DASH) {
-                PathEffect effects =
-                        new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
-                mGraphPaint.setPathEffect(effects);
-            } else {
-                mGraphPaint.setPathEffect(null);
-            }
-
-            boolean hasScaleText = mChart.getxAxis().isHasScaleText();
-
-            for (Scale scale : mChart.getxAxis().getScales()) {
+        for (Scale scale : mChart.getyAxis().getScales()) {
+            if (hasScaleLine) {
                 Path path = new Path();
                 path.moveTo(scale.getStartPos().x, scale.getStartPos().y);
                 path.lineTo(scale.getEndPos().x, scale.getEndPos().y);
                 canvas.drawPath(path, mGraphPaint);
+            }
 
-                if (hasScaleText) {
-                    canvas.drawText(scale.getScaleText(), scale.getScaleTextPos().x,
-                            scale.getScaleTextPos().y, mTextPaint);
-                }
+            if (hasScaleText) {
+                canvas.drawText(scale.getScaleText(), scale.getScaleTextPos().x,
+                        scale.getScaleTextPos().y, mTextPaint);
+            }
+        }
+
+        mGraphPaint.setStrokeWidth(mChart.getxAxis().getScaleLineWidth());
+        mGraphPaint.setColor(mChart.getxAxis().getScaleLineColor());
+
+        if (mChart.getxAxis().getScaleLineType() ==
+                Axis.LINE_TYPE_DASH) {
+            PathEffect effects =
+                    new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
+            mGraphPaint.setPathEffect(effects);
+        } else {
+            mGraphPaint.setPathEffect(null);
+        }
+
+        hasScaleLine = mChart.getxAxis().isHasScaleLine();
+        hasScaleText = mChart.getxAxis().isHasScaleText();
+
+        for (Scale scale : mChart.getxAxis().getScales()) {
+            if (hasScaleLine) {
+                Path path = new Path();
+                path.moveTo(scale.getStartPos().x, scale.getStartPos().y);
+                path.lineTo(scale.getEndPos().x, scale.getEndPos().y);
+                canvas.drawPath(path, mGraphPaint);
+            }
+
+            if (hasScaleText) {
+                canvas.drawText(scale.getScaleText(), scale.getScaleTextPos().x,
+                        scale.getScaleTextPos().y, mTextPaint);
             }
         }
     }
 
+    protected void clipContainer(Canvas canvas) {
+        List<Scale> scales = mChart.getyAxis().getScales();
+        if (scales != null && scales.size() > 0) {
+            mContainerPath.reset();
+//            canvas.clipPath(mContainerPath);
+//            mContainerPath.addCircle(mChart.getWidth() / 2, mChart.getHeight() / 2,
+//                    mChart.getWidth() / 2, Path.Direction.CCW);
+            float startX = scales.get(0).getStartPos().x;
+            float startY = scales.get(0).getStartPos().y;
+            float endX = scales.get(scales.size() - 1).getEndPos().x;
+            float endY = scales.get(scales.size() - 1).getEndPos().y;
+            mContainerPath.addRect(startX, startY, endX, endY, Path.Direction.CCW);
+            canvas.clipPath(mContainerPath, Region.Op.REPLACE);//Region.Op.REPLACE
+        }
+    }
+
+    @Override
     public float getScale() {
         return mScale;
     }
 
+    @Override
     public void setScale(float mScale) {
         this.mScale = mScale;
     }
 
+    @Override
     public float getxDelta() {
-        return xDelta;
+        return mXDelta;
     }
 
+    @Override
     public void setxDelta(float xDelta) {
-        this.xDelta = xDelta;
+        this.mXDelta = xDelta;
     }
+
 }

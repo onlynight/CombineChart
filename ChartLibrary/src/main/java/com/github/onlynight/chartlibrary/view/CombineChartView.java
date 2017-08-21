@@ -87,7 +87,7 @@ public class CombineChartView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         for (BaseChart chart : mCharts) {
-            chart.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            chart.onMeasure();
         }
     }
 

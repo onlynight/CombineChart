@@ -9,6 +9,8 @@ public class BaseEntity {
     private double mX;
     private double mY;
 
+    private long mTime;
+
     private String mXValue;
     private String mYValue;
 
@@ -44,4 +46,11 @@ public class BaseEntity {
         this.mYValue = yValue;
     }
 
+    public long getTime() {
+        return mTime;
+    }
+
+    public void setTime(long time) {
+        this.mTime = time;
+    }
 }
