@@ -17,12 +17,5 @@ public class BarChart extends BaseChart<BarChartData, BarChartRender> {
     @Override
     public void setxDelta(float xDelta) {
         super.setxDelta(xDelta);
-        resetExtremeValue();
-    }
-
-    private void resetExtremeValue() {
-        for (BarChartData data : mDataList) {
-            setExtremeValue(data);
-        }
     }
 }

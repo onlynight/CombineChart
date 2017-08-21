@@ -276,6 +276,8 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseRend
         if (mRender != null) {
             mRender.setScale(mScale);
         }
+
+        resetExtremeValue();
     }
 
     @Override
@@ -290,6 +292,14 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseRend
     public void setxDelta(float xDelta) {
         if (mRender != null) {
             mRender.setxDelta(xDelta);
+        }
+
+        resetExtremeValue();
+    }
+
+    private void resetExtremeValue() {
+        for (T data : mDataList) {
+            setExtremeValue(data);
         }
     }
 

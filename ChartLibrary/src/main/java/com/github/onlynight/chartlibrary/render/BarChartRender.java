@@ -2,6 +2,7 @@ package com.github.onlynight.chartlibrary.render;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
@@ -117,6 +118,13 @@ public class BarChartRender extends BaseRender<BarChartData> {
         onMeasure();
     }
 
+    @Override
+    public void setScale(float mScale) {
+        super.setScale(mScale);
+        cutBarEntities();
+        onMeasure();
+    }
+
     private void cutBarEntities() {
         if (mChart != null) {
             for (Object temp : mChart.getDataList()) {
@@ -141,6 +149,9 @@ public class BarChartRender extends BaseRender<BarChartData> {
                             break;
                         }
                     }
+
+                    Log.i("index", "startIndex = " + startIndex +
+                            " endIndex = " + endIndex);
 
                     if (startIndex < endIndex) {
                         List<BarEntity> subList =
