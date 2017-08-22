@@ -28,6 +28,7 @@ public class CandleStickEntity extends BaseEntity {
 
     public void setHigh(double high) {
         this.mHigh = high;
+        setY(high);
     }
 
     public double getLow() {

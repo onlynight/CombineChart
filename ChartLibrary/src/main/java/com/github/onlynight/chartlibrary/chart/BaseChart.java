@@ -7,7 +7,7 @@ import com.github.onlynight.chartlibrary.chart.part.Border;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
-import com.github.onlynight.chartlibrary.render.BaseRender;
+import com.github.onlynight.chartlibrary.render.BaseChartRender;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by lion on 2017/8/11.
  */
 
-public abstract class BaseChart<T extends BaseChartData, Render extends BaseRender<T>> implements
+public abstract class BaseChart<T extends BaseChartData, Render extends BaseChartRender<T>> implements
         IChartInterface {
 
     /**
@@ -211,24 +211,22 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseRend
         }
     }
 
-    protected void setExtremeValue(T data) {
-        if (data != null) {
-            double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
-            for (Object obj : data.getShowData()) {
-                if (obj instanceof BaseEntity) {
-                    double y = ((BaseEntity) obj).getY();
-                    if (max < y) {
-                        max = y;
-                    }
+    public void setExtremeValue(T data) {
+        double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
+        for (Object obj : data.getShowData()) {
+            if (obj instanceof BaseEntity) {
+                double y = ((BaseEntity) obj).getY();
+                if (max < y) {
+                    max = y;
+                }
 
-                    if (min > y) {
-                        min = y;
-                    }
+                if (min > y) {
+                    min = y;
                 }
             }
-            data.setYMax(max);
-            data.setYMin(min);
         }
+        data.setYMax(max);
+        data.setYMin(min);
     }
 
     public void clearData() {

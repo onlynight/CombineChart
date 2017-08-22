@@ -8,7 +8,6 @@ import android.graphics.PathEffect;
 import android.graphics.PointF;
 import android.graphics.Region;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
@@ -24,7 +23,7 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public abstract class BaseRender<T extends BaseChartData> implements
+public abstract class BaseChartRender<T extends BaseChartData> implements
         IChartInterface {
 
     protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -33,10 +32,7 @@ public abstract class BaseRender<T extends BaseChartData> implements
     protected BaseChart mChart;
     protected Path mContainerPath;
 
-    protected float mScale = 1f;
-    protected float mXDelta = 0;
-
-    public BaseRender(BaseChart chart) {
+    public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
         this.mContainerPath = new Path();
     }
@@ -215,8 +211,6 @@ public abstract class BaseRender<T extends BaseChartData> implements
         double scaleValueBlank;
         double minYValue = getYMinValue();
         double maxYValue = getYMaxValue();
-
-        Log.i("maxYValue", "maxYValue = " + maxYValue);
 
         if (grid > 0) {
             blank = yAxisHeight / grid;
@@ -603,23 +597,51 @@ public abstract class BaseRender<T extends BaseChartData> implements
     }
 
     @Override
-    public float getScale() {
-        return mScale;
-    }
-
-    @Override
     public void setScale(float mScale) {
-        this.mScale = mScale;
-    }
-
-    @Override
-    public float getxDelta() {
-        return mXDelta;
+        cutBarEntities();
+        onMeasure();
     }
 
     @Override
     public void setxDelta(float xDelta) {
-        this.mXDelta = xDelta;
+        cutBarEntities();
+        onMeasure();
+    }
+
+    private void cutBarEntities() {
+        if (mChart != null) {
+            for (Object temp : mChart.getDataList()) {
+                if (temp instanceof BaseChartData) {
+                    BaseChartData data = (BaseChartData) temp;
+                    int startIndex = 0;
+                    int endIndex = 0;
+
+                    BaseEntity temp1 = null;
+                    for (int i = 0; i < data.getData().size(); i++) {
+                        temp1 = (BaseEntity) data.getData().get(i);
+                        if (temp1.getX() <= mChart.getxAxis().getStartPos().x) {
+                            startIndex = i;
+                            break;
+                        }
+                    }
+
+                    for (int i = 0; i < data.getData().size(); i++) {
+                        temp1 = (BaseEntity) data.getData().get(i);
+                        if (temp1.getX() >= mChart.getxAxis().getEndPos().x) {
+                            endIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (startIndex < endIndex) {
+                        List subList =
+                                data.getData().subList(startIndex, endIndex);
+                        data.setShowData(subList);
+                    }
+
+                }
+            }
+        }
     }
 
 }

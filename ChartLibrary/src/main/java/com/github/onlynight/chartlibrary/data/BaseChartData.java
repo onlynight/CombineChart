@@ -51,6 +51,9 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
             entity.setxValue(xdf.format(entity.getX()));
             entity.setyValue(ydf.format(entity.getY()));
         }
+
+        mYMax = max;
+        mYMin = min;
     }
 
     public double getYMin() {

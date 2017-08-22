@@ -16,10 +16,10 @@ public class CandleStickChart extends BaseChart<CandleStickChartData, CandleStic
     }
 
     @Override
-    protected void setExtremeValue(CandleStickChartData data) {
+    public void setExtremeValue(CandleStickChartData data) {
         if (data != null && data.getData() != null) {
             double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-            for (CandleStickEntity entity : data.getData()) {
+            for (CandleStickEntity entity : data.getShowData()) {
                 if (entity.getHigh() > max) {
                     max = entity.getHigh();
                 }
