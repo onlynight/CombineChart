@@ -588,9 +588,11 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
 //            mContainerPath.addCircle(mChart.getWidth() / 2, mChart.getHeight() / 2,
 //                    mChart.getWidth() / 2, Path.Direction.CCW);
             float startX = scales.get(0).getStartPos().x;
-            float startY = scales.get(0).getStartPos().y;
+//            float startY = scales.get(0).getStartPos().y;
+            float startY = mChart.getTop();
             float endX = scales.get(scales.size() - 1).getEndPos().x;
-            float endY = scales.get(scales.size() - 1).getEndPos().y;
+//            float endY = scales.get(scales.size() - 1).getEndPos().y;
+            float endY = mChart.getBottom();
             mContainerPath.addRect(startX, startY, endX, endY, Path.Direction.CCW);
             canvas.clipPath(mContainerPath, Region.Op.REPLACE);//Region.Op.REPLACE
         }

@@ -77,4 +77,12 @@ public abstract class BasePartRender implements IChartInterface {
         return min;
     }
 
+    /**
+     * @return get font height
+     */
+    protected float getFontHeight(Paint paint) {
+        Paint.FontMetrics fm = paint.getFontMetrics();
+        return (fm.descent - fm.ascent) / 3 * 2;
+    }
+
 }

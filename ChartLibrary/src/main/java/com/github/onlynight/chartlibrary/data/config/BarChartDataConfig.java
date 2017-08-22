@@ -5,14 +5,4 @@ package com.github.onlynight.chartlibrary.data.config;
  */
 
 public class BarChartDataConfig extends BaseChartDataConfig {
-
-    private int mBarWidth;
-
-    public int getBarWidth() {
-        return mBarWidth;
-    }
-
-    public void setBarWidth(int barWidth) {
-        this.mBarWidth = barWidth;
-    }
 }

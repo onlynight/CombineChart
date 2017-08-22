@@ -1,6 +1,7 @@
 package com.github.onlynight.chartlibrary.chart;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
@@ -60,6 +61,11 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
      * it will use for top ro bottom margin.
      */
     private float mMarginTextSize = 20;
+
+    /**
+     * chart top or bottom margin text color.
+     */
+    private int mMarginTextColor = Color.BLACK;
 
     /**
      * chart data list
@@ -125,6 +131,14 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
      * @return
      */
     protected abstract Render createChartRender();
+
+    public int getMarginTextColor() {
+        return mMarginTextColor;
+    }
+
+    public void setMarginTextColor(int marginTextColor) {
+        this.mMarginTextColor = marginTextColor;
+    }
 
     public int getLeft() {
         return mLeft;
@@ -213,20 +227,26 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
 
     public void setExtremeValue(T data) {
         double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
-        for (Object obj : data.getShowData()) {
+        int maxIndex = 0, minIndex = 0;
+        for (int i = 0; i < data.getShowData().size(); i++) {
+            Object obj = data.getShowData().get(i);
             if (obj instanceof BaseEntity) {
                 double y = ((BaseEntity) obj).getY();
                 if (max < y) {
                     max = y;
+                    maxIndex = i;
                 }
 
                 if (min > y) {
                     min = y;
+                    minIndex = i;
                 }
             }
         }
         data.setYMax(max);
         data.setYMin(min);
+        data.setMinIndex(minIndex);
+        data.setMaxIndex(maxIndex);
     }
 
     public void clearData() {

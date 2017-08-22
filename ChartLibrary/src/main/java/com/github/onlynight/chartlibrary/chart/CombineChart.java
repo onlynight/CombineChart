@@ -19,19 +19,25 @@ public class CombineChart extends BaseChart<BaseChartData, CombineChartRender> {
     public void setExtremeValue(BaseChartData data) {
         if (data != null && data.getData() != null) {
             double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-            for (Object temp : data.getShowData()) {
+            int minIndex = 0, maxIndex = 0;
+            for (int i = 0; i < data.getShowData().size(); i++) {
+                Object temp = data.getShowData().get(i);
                 if (temp instanceof CandleStickEntity) {
                     CandleStickEntity entity = (CandleStickEntity) temp;
                     if (entity.getHigh() > max) {
                         max = entity.getHigh();
+                        maxIndex = i;
                     }
 
                     if (entity.getLow() < min) {
                         min = entity.getLow();
+                        minIndex = i;
                     }
 
                     data.setYMin(min);
                     data.setYMax(max);
+                    data.setMinIndex(minIndex);
+                    data.setMaxIndex(maxIndex);
                 }
             }
         }

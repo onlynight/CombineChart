@@ -19,6 +19,9 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
     protected double mYMin;
     protected double mYMax;
 
+    protected int mMaxIndex;
+    protected int mMinIndex;
+
     public BaseChartData() {
     }
 
@@ -30,6 +33,22 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
         this.mConfig = config;
     }
 
+    public int getMaxIndex() {
+        return mMaxIndex;
+    }
+
+    public void setMaxIndex(int maxIndex) {
+        this.mMaxIndex = maxIndex;
+    }
+
+    public int getMinIndex() {
+        return mMinIndex;
+    }
+
+    public void setMinIndex(int minIndex) {
+        this.mMinIndex = minIndex;
+    }
+
     public List<Entity> getShowData() {
         return mShowData;
     }
@@ -39,13 +58,16 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
         DecimalFormat xdf = new DecimalFormat(mConfig.getXFormat());
         DecimalFormat ydf = new DecimalFormat(mConfig.getYFormat());
         double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (Entity entity : mShowData) {
+        for (int i = 0; i < showData.size(); i++) {
+            Entity entity = mShowData.get(i);
             if (entity.getY() < min) {
                 min = entity.getY();
+                mMinIndex = i;
             }
 
             if (entity.getY() > max) {
                 max = entity.getY();
+                mMaxIndex = i;
             }
 
             entity.setxValue(xdf.format(entity.getX()));

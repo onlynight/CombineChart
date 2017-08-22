@@ -12,6 +12,26 @@ public abstract class BaseChartDataConfig {
     private String mXFormat = "0";
     private String mYFormat = "0";
 
+    private int mBarWidth = 10;
+
+    private boolean mIsAutoWidth = false;
+
+    public boolean isAutoWidth() {
+        return mIsAutoWidth;
+    }
+
+    public void setAutoWidth(boolean autoWidth) {
+        mIsAutoWidth = autoWidth;
+    }
+
+    public int getBarWidth() {
+        return mBarWidth;
+    }
+
+    public void setBarWidth(int barWidth) {
+        this.mBarWidth = barWidth;
+    }
+
     public String getXFormat() {
         return mXFormat;
     }

@@ -110,10 +110,11 @@ public class DataRepository {
 
     public List<BarEntity> generateBarEntities() {
         List<BarEntity> entities = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        Random random = new Random();
+        for (int i = 0; i < 50; i++) {
             BarEntity entity = new BarEntity();
             entity.setX(i);
-            entity.setY(10 * (i + 1));
+            entity.setY(Math.abs(random.nextInt() * 100 % 30));
             entity.setColor(i % 2 == 0 ? Color.RED : Color.GREEN);
             entities.add(entity);
         }

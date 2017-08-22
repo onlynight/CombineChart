@@ -36,11 +36,13 @@ public class BarPartRender extends BasePartRender {
                 if (temp instanceof BarChartData) {
                     BarChartData data = (BarChartData) temp;
                     BarChartDataConfig config = data.getConfig();
-                    Axis xAxis = mChart.getxAxis();
-                    chartWidth = xAxis.getEndPos().x - xAxis.getStartPos().x;
-                    if (data.getData() != null &&
-                            data.getData().size() > 0) {
-                        config.setBarWidth((int) (chartWidth / (float) data.getData().size()));
+                    if (config.isAutoWidth()) {
+                        Axis xAxis = mChart.getxAxis();
+                        chartWidth = xAxis.getEndPos().x - xAxis.getStartPos().x;
+                        if (data.getData() != null &&
+                                data.getData().size() > 0) {
+                            config.setBarWidth((int) (chartWidth / (float) data.getData().size()));
+                        }
                     }
                 }
             }

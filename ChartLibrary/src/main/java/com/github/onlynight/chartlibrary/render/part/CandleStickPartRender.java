@@ -35,9 +35,11 @@ public class CandleStickPartRender extends BasePartRender {
                 if (temp instanceof CandleStickChartData) {
                     CandleStickChartData data = (CandleStickChartData) temp;
                     CandleStickChartDataConfig config = data.getConfig();
-                    float chartWidth = mChart.getxAxis().getEndPos().x -
-                            mChart.getxAxis().getStartPos().x;
-                    config.setBarWidth((int) (chartWidth / data.getData().size()));
+                    if (config.isAutoWidth()) {
+                        float chartWidth = mChart.getxAxis().getEndPos().x -
+                                mChart.getxAxis().getStartPos().x;
+                        config.setBarWidth((int) (chartWidth / data.getData().size()));
+                    }
                 }
             }
         }
@@ -64,6 +66,8 @@ public class CandleStickPartRender extends BasePartRender {
 
             mGraphPaint.setStyle(Paint.Style.FILL);
             mGraphPaint.setStrokeWidth(config.getStrokeWidth());
+            mTextPaint.setTextSize(mChart.getMarginTextSize());
+            mTextPaint.setColor(mChart.getMarginTextColor());
 
             double range = data.getYMax() - data.getYMin();
             float chartHeight = 0;
@@ -120,7 +124,24 @@ public class CandleStickPartRender extends BasePartRender {
                     canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
                     canvas.drawLine(tempX, highY, tempX, lowY, mGraphPaint);
 
+//                    canvas.drawText("a", x1, y1, mTextPaint);
+
                     entity.setX(highX);
+                }
+
+                if (data.getShowData() != null &&
+                        data.getShowData().size() > data.getMaxIndex()) {
+
+                    CandleStickEntity minEntity =
+                            data.getShowData().get(data.getMinIndex());
+                    CandleStickEntity maxEntity =
+                            data.getShowData().get(data.getMaxIndex());
+
+                    canvas.drawText(String.valueOf(minEntity.getLow()), (float) minEntity.getX(),
+                            mChart.getBottom() - BaseChart.BLANK, mTextPaint);
+
+                    canvas.drawText(String.valueOf(maxEntity.getHigh()), (float) maxEntity.getX(),
+                            mChart.getTop() + BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
                 }
             }
         }

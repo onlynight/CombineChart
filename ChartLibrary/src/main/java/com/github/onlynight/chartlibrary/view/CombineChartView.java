@@ -3,10 +3,15 @@ package com.github.onlynight.chartlibrary.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +20,16 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public class CombineChartView extends View {
+public class CombineChartView extends View implements IChartInterface {
 
     private List<BaseChart> mCharts;
     private float mScale = 1f;
     private float xDelta = 0;
+
+    private GestureDetectorCompat mDetector;
+    private ScaleGestureDetector mScaleDetector;
+
+    private MyGestureListener gestureListener;
 
     public CombineChartView(Context context) {
         super(context);
@@ -38,6 +48,9 @@ public class CombineChartView extends View {
 
     private void initView() {
         mCharts = new ArrayList<>();
+        gestureListener = new MyGestureListener();
+        mDetector = new GestureDetectorCompat(getContext(), gestureListener);
+//        mScaleDetector = new ScaleGestureDetector(getContext(), this);
     }
 
     public void addChart(BaseChart chart) {
@@ -103,10 +116,12 @@ public class CombineChartView extends View {
         }
     }
 
+    @Override
     public float getScale() {
         return mScale;
     }
 
+    @Override
     public void setScale(float mScale) {
         this.mScale = mScale;
         for (BaseChart chart : mCharts) {
@@ -114,14 +129,38 @@ public class CombineChartView extends View {
         }
     }
 
+    @Override
     public float getxDelta() {
         return xDelta;
     }
 
+    @Override
     public void setxDelta(float xDelta) {
         this.xDelta = xDelta;
         for (BaseChart chart : mCharts) {
             chart.setxDelta(xDelta);
         }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        this.mDetector.onTouchEvent(event);
+//        this.mScaleDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            setxDelta(distanceX);
+            return true;
+        }
+    }
+
 }

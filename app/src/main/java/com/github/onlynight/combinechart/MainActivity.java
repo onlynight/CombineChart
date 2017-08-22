@@ -43,10 +43,12 @@ public class MainActivity extends AppCompatActivity {
         mDataRepository = new DataRepository();
 
         mCombineChartView = (CombineChartView) findViewById(R.id.chart);
-        mCombineChartView.addChart(generateCombineChart());
-        mCombineChartView.addChart(generateCandleChart());
-        mCombineChartView.addChart(generateLineChart());
-        mCombineChartView.addChart(generateBarChart());
+        mCombineChartView.addChart(generateCombineChart1());
+        mCombineChartView.addChart(generateCombineChart2());
+        mCombineChartView.addChart(generateCombineChart3());
+//        mCombineChartView.addChart(generateCandleChart());
+//        mCombineChartView.addChart(generateLineChart());
+//        mCombineChartView.addChart(generateBarChart());
 
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         LineChartDataConfig config = new LineChartDataConfig();
         config.setColor(lineColor);
-        config.setStrokeWidth(3f);
+        config.setStrokeWidth(2f);
         config.setXFormat("0");
         config.setYFormat("0.00");
 
@@ -131,13 +133,13 @@ public class MainActivity extends AppCompatActivity {
         return data;
     }
 
-    private CombineChart generateCombineChart() {
+    private CombineChart generateCombineChart1() {
         CombineChart candleChart = new CombineChart();
         candleChart.setMarginTextSize(getResources().getDimension(R.dimen.textSize10));
         candleChart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         CandleStickChartData data = generateCandleChartData();
         candleChart.addData(data);
-        LineChartData data1 = generateCombineLineData(Color.BLUE);
+        LineChartData data1 = generateCombineLineData(Color.BLACK);
         candleChart.addData(data1);
 
         Axis y = candleChart.getyAxis();
@@ -163,6 +165,86 @@ public class MainActivity extends AppCompatActivity {
         Border border = candleChart.getBorder();
         border.setWidth(1);
         border.setHasBottom(false);
+        border.setHasRight(false);
+        x.setHasScaleLine(false);
+        border.setColor(Color.GRAY);
+
+        return candleChart;
+    }
+
+    private CombineChart generateCombineChart2() {
+        CombineChart candleChart = new CombineChart();
+        candleChart.setWeight(0.5f);
+        candleChart.setMarginTextSize(getResources().getDimension(R.dimen.textSize10));
+        candleChart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
+        BarChartData data = generateBarData();
+        candleChart.addData(data);
+        LineChartData data1 = generateCombineLineData(Color.BLACK);
+        candleChart.addData(data1);
+
+        Axis y = candleChart.getyAxis();
+        y.setPosition(Axis.POSITION_RIGHT);
+        y.setColor(Color.BLACK);
+        y.setWidth(1);
+        y.setLineType(Axis.LINE_TYPE_DASH);
+        y.setTextSize(getResources().getDimension(R.dimen.textSize10));
+        y.setGrid(5);
+        y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
+        y.setTextColor(Color.BLACK);
+
+        Axis x = candleChart.getxAxis();
+        x.setPosition(Axis.POSITION_TOP);
+        x.setColor(Color.BLACK);
+        x.setWidth(1);
+        x.setTextSize(getResources().getDimension(R.dimen.textSize10));
+        x.setHasLine(false);
+        x.setHasScaleText(false);
+        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setTextColor(Color.BLACK);
+
+        Border border = candleChart.getBorder();
+        border.setWidth(1);
+        border.setHasBottom(false);
+        border.setHasRight(false);
+        x.setHasScaleLine(false);
+        border.setColor(Color.GRAY);
+
+        return candleChart;
+    }
+
+    private CombineChart generateCombineChart3() {
+        CombineChart candleChart = new CombineChart();
+        candleChart.setWeight(0.5f);
+        candleChart.setMarginTextSize(getResources().getDimension(R.dimen.textSize10));
+        candleChart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
+        BarChartData data = generateBarData();
+        candleChart.addData(data);
+        LineChartData data1 = generateCombineLineData(Color.BLACK);
+        candleChart.addData(data1);
+
+        Axis y = candleChart.getyAxis();
+        y.setPosition(Axis.POSITION_RIGHT);
+        y.setColor(Color.BLACK);
+        y.setWidth(1);
+        y.setLineType(Axis.LINE_TYPE_DASH);
+        y.setTextSize(getResources().getDimension(R.dimen.textSize10));
+        y.setGrid(5);
+        y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
+        y.setTextColor(Color.BLACK);
+
+        Axis x = candleChart.getxAxis();
+        x.setPosition(Axis.POSITION_BOTTOM);
+        x.setColor(Color.BLACK);
+        x.setWidth(1);
+        x.setTextSize(getResources().getDimension(R.dimen.textSize10));
+        x.setHasLine(true);
+        x.setHasScaleText(true);
+        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setTextColor(Color.BLACK);
+
+        Border border = candleChart.getBorder();
+        border.setWidth(1);
+        border.setHasBottom(true);
         border.setHasRight(false);
         x.setHasScaleLine(false);
         border.setColor(Color.GRAY);
@@ -209,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CandleStickChartData generateCandleChartData() {
         CandleStickChartDataConfig config = new CandleStickChartDataConfig();
+        config.setBarWidth(10);
         config.setIncreasingColor(Color.RED);
         config.setDecreasingColor(Color.GREEN);
         config.setStrokeWidth(2f);

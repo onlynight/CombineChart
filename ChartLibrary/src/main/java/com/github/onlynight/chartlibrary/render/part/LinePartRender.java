@@ -52,17 +52,16 @@ public class LinePartRender extends BasePartRender {
 
         List<LineEntity> entities = data.getData();
         Path path = new Path();
-        PointF ptf = calculateChartPos(entities, 0);
+        PointF ptf = calculateChartPos(entities, data.getConfig(), 0);
         if (ptf != null) {
+            LineChartDataConfig config = data.getConfig();
             path.moveTo(ptf.x, ptf.y);
             for (int i = 0; i < entities.size(); i++) {
-                PointF temp = calculateChartPos(entities, i);
+                PointF temp = calculateChartPos(entities, config, i);
                 if (temp != null) {
                     path.lineTo(temp.x, temp.y);
                 }
             }
-
-            LineChartDataConfig config = data.getConfig();
             if (config != null) {
                 mGraphPaint.setStrokeWidth(config.getStrokeWidth());
                 mGraphPaint.setColor(config.getColor());
@@ -73,7 +72,8 @@ public class LinePartRender extends BasePartRender {
         }
     }
 
-    private PointF calculateChartPos(List<LineEntity> entities, int index) {
+    private PointF calculateChartPos(List<LineEntity> entities,
+                                     LineChartDataConfig config, int index) {
         List<Scale> scales = mChart.getyAxis().getScales();
         if (scales == null || scales.size() <= 0) {
             return null;
@@ -87,7 +87,13 @@ public class LinePartRender extends BasePartRender {
         double minValue = getYMinValue();
         double valueRange = maxValue - minValue;
 
-        float blank = chartWidth / (entities.size() - 1);
+        float blank;
+
+        if (config.isAutoWidth()) {
+            blank = chartWidth / (entities.size() - 1);
+        } else {
+            blank = config.getBarWidth();
+        }
 
         LineEntity entity = entities.get(index);
         float y = (float) ((entity.getY() - minValue) / valueRange * chartHeight)
