@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.onlynight.chartlibrary.util.Utils.initMA;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String MAX_Y_SCALE_TEXT = "0.0000000";
@@ -150,37 +152,6 @@ public class MainActivity extends AppCompatActivity {
         data.setData(entities);
 
         return data;
-    }
-
-    private List<LineEntity> initMA(int days, CandleStickChartData data) {
-
-        if (days < 2 || data == null || data.getData() == null) {
-            return null;
-        }
-
-        List<LineEntity> MA_X_Values = new ArrayList<>();
-
-        float sum = 0;
-        float avg = 0;
-        List<CandleStickEntity> tempData = data.getData();
-        for (int i = 0; i < tempData.size(); i++) {
-            float close = (float) tempData.get(i).getClose();
-            if (i < days) {
-                sum = sum + close;
-                avg = sum / (i + 1f);
-            } else {
-                sum = sum + close
-                        - (float) tempData.get(i - days).getClose();
-                avg = sum / days;
-            }
-
-            LineEntity entity = new LineEntity();
-            entity.setX(i);
-            entity.setY(avg);
-            MA_X_Values.add(entity);
-        }
-
-        return MA_X_Values;
     }
 
     private CombineChart generateCombineChart1() {
