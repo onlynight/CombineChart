@@ -31,6 +31,8 @@ public class CombineChartView extends View implements IChartInterface {
 
     private MyGestureListener gestureListener;
 
+    private boolean mIsOperatable = true;
+
     public CombineChartView(Context context) {
         super(context);
         initView();
@@ -50,7 +52,7 @@ public class CombineChartView extends View implements IChartInterface {
         mCharts = new ArrayList<>();
         gestureListener = new MyGestureListener();
         mDetector = new GestureDetectorCompat(getContext(), gestureListener);
-//        mScaleDetector = new ScaleGestureDetector(getContext(), this);
+        mScaleDetector = new ScaleGestureDetector(getContext(), gestureListener);
     }
 
     public void addChart(BaseChart chart) {
@@ -144,23 +146,67 @@ public class CombineChartView extends View implements IChartInterface {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        this.mDetector.onTouchEvent(event);
+        if (mIsOperatable) {
+            int count = event.getPointerCount();
+            if (count <= 1) {
+                return mDetector.onTouchEvent(event);
+            } else {
+                return mScaleDetector.onTouchEvent(event);
+            }
+        } else {
+            return super.onTouchEvent(event);
+        }
 //        this.mScaleDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
     }
 
-    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener
+            implements ScaleGestureDetector.OnScaleGestureListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
+            e.getAction();
             return true;
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            setxDelta(distanceX);
+            setxDelta(getxDelta() - distanceX);
+            invalidate();
             return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return true;
+        }
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float currentScale = detector.getScaleFactor();
+            float scale = mLastScale * currentScale;
+            setScale(scale);
+            invalidate();
+            return false;
+        }
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            mLastScale = getScale();
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector) {
         }
     }
 
+    private float mLastScale = 1f;
+
+    public boolean isOperatable() {
+        return mIsOperatable;
+    }
+
+    public void setOperatable(boolean operatable) {
+        mIsOperatable = operatable;
+    }
 }

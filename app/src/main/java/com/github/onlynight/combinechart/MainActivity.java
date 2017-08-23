@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mDataRepository = new DataRepository();
 
         mCombineChartView = (CombineChartView) findViewById(R.id.chart);
+        mCombineChartView.setOperatable(false);
         mCombineChartView.addChart(generateCombineChart1());
         mCombineChartView.addChart(generateCombineChart2());
         mCombineChartView.addChart(generateCombineChart3());
@@ -133,14 +134,67 @@ public class MainActivity extends AppCompatActivity {
         return data;
     }
 
+    private LineChartData generateCombineLineData1(
+            int lineColor, int days, CandleStickChartData candleStickChartData) {
+
+        LineChartDataConfig config = new LineChartDataConfig();
+        config.setColor(lineColor);
+        config.setStrokeWidth(2f);
+        config.setXFormat("0");
+        config.setYFormat("0.00");
+        config.setAutoWidth(true);
+
+        LineChartData data = new LineChartData(config);
+
+        List<LineEntity> entities = initMA(days, candleStickChartData);
+        data.setData(entities);
+
+        return data;
+    }
+
+    private List<LineEntity> initMA(int days, CandleStickChartData data) {
+
+        if (days < 2 || data == null || data.getData() == null) {
+            return null;
+        }
+
+        List<LineEntity> MA_X_Values = new ArrayList<>();
+
+        float sum = 0;
+        float avg = 0;
+        List<CandleStickEntity> tempData = data.getData();
+        for (int i = 0; i < tempData.size(); i++) {
+            float close = (float) tempData.get(i).getClose();
+            if (i < days) {
+                sum = sum + close;
+                avg = sum / (i + 1f);
+            } else {
+                sum = sum + close
+                        - (float) tempData.get(i - days).getClose();
+                avg = sum / days;
+            }
+
+            LineEntity entity = new LineEntity();
+            entity.setX(i);
+            entity.setY(avg);
+            MA_X_Values.add(entity);
+        }
+
+        return MA_X_Values;
+    }
+
     private CombineChart generateCombineChart1() {
         CombineChart candleChart = new CombineChart();
         candleChart.setMarginTextSize(getResources().getDimension(R.dimen.textSize10));
         candleChart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         CandleStickChartData data = generateCandleChartData();
         candleChart.addData(data);
-        LineChartData data1 = generateCombineLineData(Color.BLACK);
-        candleChart.addData(data1);
+        LineChartData data5 = generateCombineLineData1(Color.GRAY, 5, data);
+        candleChart.addData(data5);
+        LineChartData data10 = generateCombineLineData1(Color.CYAN, 10, data);
+        candleChart.addData(data10);
+        LineChartData data20 = generateCombineLineData1(Color.MAGENTA, 20, data);
+        candleChart.addData(data20);
 
         Axis y = candleChart.getyAxis();
         y.setPosition(Axis.POSITION_RIGHT);
@@ -297,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
         config.setStrokeWidth(2f);
         config.setXFormat("0");
         config.setYFormat("0.00");
+        config.setAutoWidth(true);
 
         CandleStickChartData data = new CandleStickChartData(config);
         List<CandleStickEntity> entities = mDataRepository.generateCandleStickEntities();
