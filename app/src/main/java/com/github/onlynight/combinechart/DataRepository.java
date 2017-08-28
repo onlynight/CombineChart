@@ -20,7 +20,7 @@ public class DataRepository {
         List<CandleStickEntity> entities = new ArrayList<>();
 
         CandleStickEntity entity;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 8; i++) {
             entity = new CandleStickEntity();
             entity.setOpen(1);
             entity.setClose(10);
@@ -98,7 +98,7 @@ public class DataRepository {
     public List<LineEntity> generateCombineLineEntities() {
         List<LineEntity> entities = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 80; i++) {
             LineEntity entity = new LineEntity();
             entity.setX(i);
             entity.setY(Math.abs(random.nextInt() * 100 % 30));
@@ -111,7 +111,7 @@ public class DataRepository {
     public List<BarEntity> generateBarEntities() {
         List<BarEntity> entities = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 80; i++) {
             BarEntity entity = new BarEntity();
             entity.setX(i);
             entity.setY(Math.abs(random.nextInt() * 100 % 30));

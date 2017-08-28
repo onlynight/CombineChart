@@ -41,7 +41,7 @@ public class BarPartRender extends BasePartRender {
                         chartWidth = xAxis.getEndPos().x - xAxis.getStartPos().x;
                         if (data.getData() != null &&
                                 data.getData().size() > 0) {
-                            config.setBarWidth((int) (chartWidth / (float) data.getData().size()));
+                            config.setBarWidth(chartWidth / (float) data.getData().size());
                         }
                     }
                 }
@@ -78,8 +78,8 @@ public class BarPartRender extends BasePartRender {
                 chartHeight = Math.abs(scales.get(0).getStartPos().y -
                         scales.get(scales.size() - 1).getEndPos().y);
                 float startY = scales.get(scales.size() - 1).getEndPos().y;
-                float endX = scales.get(scales.size() - 1).getEndPos().x;
-                float startX = scales.get(0).getStartPos().x;
+                float endX = mChart.getxAxis().getEndPos().x;
+                float startX = mChart.getxAxis().getStartPos().x;
 
                 float x1, y1, x2, y2 = startY;
                 int size = data.getData().size();

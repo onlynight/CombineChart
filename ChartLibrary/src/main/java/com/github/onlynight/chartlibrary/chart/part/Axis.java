@@ -109,6 +109,8 @@ public class Axis {
      */
     private boolean mHasScaleText = true;
 
+    private float mScaleMargin = 50f;
+
     /**
      * axis start position
      */
@@ -278,5 +280,13 @@ public class Axis {
 
     public void setHasScaleLine(boolean hasScaleLine) {
         this.mHasScaleLine = hasScaleLine;
+    }
+
+    public float getScaleMargin() {
+        return mScaleMargin;
+    }
+
+    public void setScaleMargin(float scaleMargin) {
+        this.mScaleMargin = scaleMargin;
     }
 }

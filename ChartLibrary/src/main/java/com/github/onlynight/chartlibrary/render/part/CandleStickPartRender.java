@@ -35,10 +35,11 @@ public class CandleStickPartRender extends BasePartRender {
                 if (temp instanceof CandleStickChartData) {
                     CandleStickChartData data = (CandleStickChartData) temp;
                     CandleStickChartDataConfig config = data.getConfig();
-                    if (config.isAutoWidth()) {
+                    if (config.isAutoWidth() &&
+                            data.getData() != null) {
                         float chartWidth = mChart.getxAxis().getEndPos().x -
                                 mChart.getxAxis().getStartPos().x;
-                        config.setBarWidth((int) (chartWidth / data.getData().size()));
+                        config.setBarWidth(chartWidth / data.getData().size());
                     }
                 }
             }
@@ -66,8 +67,6 @@ public class CandleStickPartRender extends BasePartRender {
 
             mGraphPaint.setStyle(Paint.Style.FILL);
             mGraphPaint.setStrokeWidth(config.getStrokeWidth());
-            mTextPaint.setTextSize(mChart.getMarginTextSize());
-            mTextPaint.setColor(mChart.getMarginTextColor());
 
             double range = data.getYMax() - data.getYMin();
             float chartHeight = 0;
@@ -78,8 +77,8 @@ public class CandleStickPartRender extends BasePartRender {
                 chartHeight = Math.abs(scales.get(0).getStartPos().y -
                         scales.get(scales.size() - 1).getEndPos().y);
                 float startY = scales.get(scales.size() - 1).getEndPos().y;
-                float endX = scales.get(scales.size() - 1).getEndPos().x;
-                float startX = scales.get(0).getStartPos().x;
+                float endX = mChart.getxAxis().getEndPos().x;
+                float startX = mChart.getxAxis().getStartPos().x;
 
                 float x1, y1, x2, y2;
                 float highX, highY, lowX, lowY;
@@ -121,6 +120,12 @@ public class CandleStickPartRender extends BasePartRender {
                     lowY = startY - (float) ((entity.getLow() - data.getYMin()) / range * chartHeight);
 
                     int tempX = (int) (highX + BAR_BLANK - config.getStrokeWidth() / 2);
+
+                    // if open equals close
+                    if (y1 == y2) {
+                        y2 += 2;
+                    }
+
                     canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
                     canvas.drawLine(tempX, highY, tempX, lowY, mGraphPaint);
 
@@ -128,22 +133,59 @@ public class CandleStickPartRender extends BasePartRender {
 
                     entity.setX(highX);
                 }
-
-                if (data.getShowData() != null &&
-                        data.getShowData().size() > data.getMaxIndex()) {
-
-                    CandleStickEntity minEntity =
-                            data.getShowData().get(data.getMinIndex());
-                    CandleStickEntity maxEntity =
-                            data.getShowData().get(data.getMaxIndex());
-
-                    canvas.drawText(String.valueOf(minEntity.getLow()), (float) minEntity.getX(),
-                            mChart.getBottom() - BaseChart.BLANK, mTextPaint);
-
-                    canvas.drawText(String.valueOf(maxEntity.getHigh()), (float) maxEntity.getX(),
-                            mChart.getTop() + BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
-                }
             }
+        }
+
+        drawMinAndMax(data, canvas);
+    }
+
+    private void drawMinAndMax(CandleStickChartData data, Canvas canvas) {
+        if (data.getShowData() != null &&
+                data.getShowData().size() > data.getMaxIndex()) {
+
+            mTextPaint.setTextSize(mChart.getMarginTextSize());
+            mTextPaint.setColor(mChart.getMarginTextColor());
+
+            CandleStickEntity minEntity =
+                    data.getShowData().get(data.getMinIndex());
+            CandleStickEntity maxEntity =
+                    data.getShowData().get(data.getMaxIndex());
+
+            String low;
+            if (data.getConfig().getYValueFormatter() != null) {
+                low = data.getConfig().getYValueFormatter().format(minEntity.getLow());
+            } else {
+                low = String.valueOf(minEntity.getLow());
+            }
+
+            float textWidth = mTextPaint.measureText(low);
+            double tempX = minEntity.getX() + textWidth;
+            if (tempX > mChart.getxAxis().getEndPos().x) {
+                tempX = minEntity.getX() - textWidth;
+            } else {
+                tempX = minEntity.getX();
+            }
+            canvas.drawText(low, (float) tempX,
+                    mChart.getyAxis().getScales().
+                            get(mChart.getxAxis().getScales().size()).getStartPos().y +
+                            BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
+
+            String high;
+            if (data.getConfig().getYValueFormatter() != null) {
+                high = data.getConfig().getYValueFormatter().format(maxEntity.getHigh());
+            } else {
+                high = String.valueOf(maxEntity.getHigh());
+            }
+            textWidth = mTextPaint.measureText(high);
+            tempX = maxEntity.getX() + textWidth;
+            if (tempX > mChart.getxAxis().getEndPos().x) {
+                tempX = maxEntity.getX() - textWidth;
+            } else {
+                tempX = maxEntity.getX();
+            }
+
+            canvas.drawText(high, (float) tempX,
+                    mChart.getTop() + BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
         }
     }
 

@@ -1,8 +1,11 @@
 package com.github.onlynight.combinechart;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.SeekBar;
 
 import com.github.onlynight.chartlibrary.chart.BarChart;
@@ -21,6 +24,7 @@ import com.github.onlynight.chartlibrary.data.entity.BarEntity;
 import com.github.onlynight.chartlibrary.data.entity.CandleStickEntity;
 import com.github.onlynight.chartlibrary.data.entity.LineEntity;
 import com.github.onlynight.chartlibrary.view.CombineChartView;
+import com.github.onlynight.combinechart.formatter.YValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String MAX_Y_SCALE_TEXT = "0.0000000";
 
     private CombineChartView mCombineChartView;
-    private SeekBar seekBar;
 
     private DataRepository mDataRepository;
 
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 //        mCombineChartView.addChart(generateLineChart());
 //        mCombineChartView.addChart(generateBarChart());
 
-        seekBar = (SeekBar) findViewById(R.id.seekbar);
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -107,10 +110,9 @@ public class MainActivity extends AppCompatActivity {
     private LineChartData generateLineData(int lineColor) {
 
         LineChartDataConfig config = new LineChartDataConfig();
+        config.setYValueFormatter(new YValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(1f);
-        config.setXFormat("0");
-        config.setYFormat("0.00");
 
         LineChartData data = new LineChartData(config);
 
@@ -123,10 +125,10 @@ public class MainActivity extends AppCompatActivity {
     private LineChartData generateCombineLineData(int lineColor) {
 
         LineChartDataConfig config = new LineChartDataConfig();
+        config.setYValueFormatter(new YValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
-        config.setXFormat("0");
-        config.setYFormat("0.00");
+        config.setAutoWidth(true);
 
         LineChartData data = new LineChartData(config);
 
@@ -140,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
             int lineColor, int days, CandleStickChartData candleStickChartData) {
 
         LineChartDataConfig config = new LineChartDataConfig();
+        config.setYValueFormatter(new YValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
-        config.setXFormat("0");
-        config.setYFormat("0.00");
         config.setAutoWidth(true);
 
         LineChartData data = new LineChartData(config);
@@ -317,11 +318,10 @@ public class MainActivity extends AppCompatActivity {
     private CandleStickChartData generateCandleChartData() {
         CandleStickChartDataConfig config = new CandleStickChartDataConfig();
         config.setBarWidth(10);
+        config.setYValueFormatter(new YValueFormatter());
         config.setIncreasingColor(Color.RED);
         config.setDecreasingColor(Color.GREEN);
         config.setStrokeWidth(2f);
-        config.setXFormat("0");
-        config.setYFormat("0.00");
         config.setAutoWidth(true);
 
         CandleStickChartData data = new CandleStickChartData(config);
@@ -410,11 +410,29 @@ public class MainActivity extends AppCompatActivity {
         return barChart;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.menuSingleChart:
+                Intent intent = new Intent(this, SingleChartListActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private BarChartData generateBarData() {
         BarChartDataConfig config = new BarChartDataConfig();
         config.setStrokeWidth(1);
-        config.setXFormat("0");
-        config.setYFormat("0.00");
+        config.setAutoWidth(true);
+        config.setYValueFormatter(new YValueFormatter());
         BarChartData data = new BarChartData(config);
 
         List<BarEntity> entities = mDataRepository.generateBarEntities();

@@ -22,20 +22,45 @@ public class CandleStickChart extends BaseChart<CandleStickChartData, CandleStic
             int minIndex = 0, maxIndex = 0;
             for (int i = 0; i < data.getShowData().size(); i++) {
                 CandleStickEntity entity = data.getShowData().get(i);
-                if (entity.getHigh() > max) {
+                if (entity.getHigh() >= max) {
                     max = entity.getHigh();
                     maxIndex = i;
                 }
 
-                if (entity.getLow() < min) {
+                if (entity.getLow() <= min) {
                     min = entity.getLow();
                     minIndex = i;
                 }
             }
             data.setYMin(min);
+            if (max == min) {
+                max += getMaxDelta(max);
+            }
             data.setYMax(max);
             data.setMinIndex(minIndex);
             data.setMaxIndex(maxIndex);
         }
+    }
+
+    private double getMaxDelta(double max) {
+        if (max > 0.1) {
+            return 0.1;
+        } else if (max > 0.01) {
+            return 0.01;
+        } else if (max > 0.001) {
+            return 0.001;
+        } else if (max > 0.0001) {
+            return 0.0001;
+        } else if (max > 0.00001) {
+            return 0.00001;
+        } else if (max > 0.000001) {
+            return 0.000001;
+        } else if (max > 0.0000001) {
+            return 0.0000001;
+        } else if (max > 0.00000001) {
+            return 0.00000001;
+        }
+
+        return 0;
     }
 }

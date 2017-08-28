@@ -1,5 +1,7 @@
 package com.github.onlynight.chartlibrary.data.config;
 
+import com.github.onlynight.chartlibrary.data.formatter.ValueFormatter;
+
 /**
  * Created by lion on 2017/8/10.
  */
@@ -8,13 +10,10 @@ public abstract class BaseChartDataConfig {
 
     private int mColor;
     private float mStrokeWidth;
-
-    private String mXFormat = "0";
-    private String mYFormat = "0";
-
-    private int mBarWidth = 10;
-
+    private float mBarWidth = 10f;
     private boolean mIsAutoWidth = false;
+    private ValueFormatter mXValueFormatter;
+    private ValueFormatter mYValueFormatter;
 
     public boolean isAutoWidth() {
         return mIsAutoWidth;
@@ -24,28 +23,12 @@ public abstract class BaseChartDataConfig {
         mIsAutoWidth = autoWidth;
     }
 
-    public int getBarWidth() {
+    public float getBarWidth() {
         return mBarWidth;
     }
 
-    public void setBarWidth(int barWidth) {
+    public void setBarWidth(float barWidth) {
         this.mBarWidth = barWidth;
-    }
-
-    public String getXFormat() {
-        return mXFormat;
-    }
-
-    public void setXFormat(String xFormat) {
-        this.mXFormat = xFormat;
-    }
-
-    public String getYFormat() {
-        return mYFormat;
-    }
-
-    public void setYFormat(String yFormat) {
-        this.mYFormat = yFormat;
     }
 
     public int getColor() {
@@ -64,4 +47,19 @@ public abstract class BaseChartDataConfig {
         this.mStrokeWidth = strokeWidth;
     }
 
+    public ValueFormatter getXValueFormatter() {
+        return mXValueFormatter;
+    }
+
+    public void setXValueFormatter(ValueFormatter mXValueFormatter) {
+        this.mXValueFormatter = mXValueFormatter;
+    }
+
+    public ValueFormatter getYValueFormatter() {
+        return mYValueFormatter;
+    }
+
+    public void setYValueFormatter(ValueFormatter mYValueFormatter) {
+        this.mYValueFormatter = mYValueFormatter;
+    }
 }

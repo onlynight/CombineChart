@@ -3,7 +3,6 @@ package com.github.onlynight.chartlibrary.data;
 import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -55,27 +54,66 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
 
     public void setShowData(List<Entity> showData) {
         this.mShowData = showData;
-        DecimalFormat xdf = new DecimalFormat(mConfig.getXFormat());
-        DecimalFormat ydf = new DecimalFormat(mConfig.getYFormat());
-        double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-        for (int i = 0; i < showData.size(); i++) {
-            Entity entity = mShowData.get(i);
-            if (entity.getY() < min) {
-                min = entity.getY();
-                mMinIndex = i;
+        reformatData();
+    }
+
+    public void reformatData() {
+        if (mShowData != null) {
+            double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+            for (int i = 0; i < mShowData.size(); i++) {
+                Entity entity = mShowData.get(i);
+                if (entity.getY() < min) {
+                    min = entity.getY();
+                    mMinIndex = i;
+                }
+
+                if (entity.getY() > max) {
+                    max = entity.getY();
+                    mMaxIndex = i;
+                }
+
+                if (mConfig.getXValueFormatter() != null) {
+                    entity.setxValue(mConfig.getXValueFormatter().format(entity));
+                } else {
+                    entity.setxValue(String.valueOf(entity.getX()));
+                }
+
+                if (mConfig.getYValueFormatter() != null) {
+                    entity.setyValue(mConfig.getYValueFormatter().format(entity));
+                } else {
+                    entity.setyValue(String.valueOf(entity.getY()));
+                }
             }
 
-            if (entity.getY() > max) {
-                max = entity.getY();
-                mMaxIndex = i;
+            if (min == max) {
+                max += getMaxDelta(max);
             }
 
-            entity.setxValue(xdf.format(entity.getX()));
-            entity.setyValue(ydf.format(entity.getY()));
+            mYMax = max;
+            mYMin = min;
+        }
+    }
+
+    private double getMaxDelta(double max) {
+        if (max > 0.1) {
+            return 0.1;
+        } else if (max > 0.01) {
+            return 0.01;
+        } else if (max > 0.001) {
+            return 0.001;
+        } else if (max > 0.0001) {
+            return 0.0001;
+        } else if (max > 0.00001) {
+            return 0.00001;
+        } else if (max > 0.000001) {
+            return 0.000001;
+        } else if (max > 0.0000001) {
+            return 0.0000001;
+        } else if (max > 0.00000001) {
+            return 0.00000001;
         }
 
-        mYMax = max;
-        mYMin = min;
+        return 0;
     }
 
     public double getYMin() {
@@ -107,4 +145,7 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
         return mConfig;
     }
 
+    public void setConfig(Config mConfig) {
+        this.mConfig = mConfig;
+    }
 }

@@ -10,7 +10,7 @@ public class CandleStickEntity extends BaseEntity {
     private double mLow;
     private double mOpen;
     private double mClose;
-    private long mTime;
+    private double mVol;
 
     private int mColor;
 
@@ -55,12 +55,11 @@ public class CandleStickEntity extends BaseEntity {
         this.mClose = close;
     }
 
-    public long getTime() {
-        return mTime;
+    public double getVol() {
+        return mVol;
     }
 
-    public void setTime(long time) {
-        this.mTime = time;
+    public void setVol(double mVol) {
+        this.mVol = mVol;
     }
-
 }

@@ -23,8 +23,8 @@ public class Border {
     /**
      * border's position
      */
-    private PointF topLeft;
-    private PointF bottomRight;
+    private PointF topLeft = new PointF();
+    private PointF bottomRight = new PointF();
 
     /**
      * has the left border

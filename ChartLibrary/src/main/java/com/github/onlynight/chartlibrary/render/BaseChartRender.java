@@ -16,7 +16,6 @@ import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -32,9 +31,19 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     protected BaseChart mChart;
     protected Path mContainerPath;
 
+    private boolean mIsClipContainer = false;
+
     public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
         this.mContainerPath = new Path();
+    }
+
+    public boolean isClipContainer() {
+        return mIsClipContainer;
+    }
+
+    public void setIsClipContainer(boolean isClipContainer) {
+        this.mIsClipContainer = isClipContainer;
     }
 
     public void onMeasure() {
@@ -50,7 +59,9 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     }
 
     public void onDrawChart(Canvas canvas) {
-        clipContainer(canvas);
+        if (mIsClipContainer) {
+            clipContainer(canvas);
+        }
     }
 
     protected void measureBorder() {
@@ -140,16 +151,16 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     }
 
     private String getYAxisTextMaxLength(List<T> dataList) {
-        String maxText = "0.0000";
+        String maxText = "0.00";
         if (mChart != null) {
             maxText = mChart.generateMaxLengthYAxisScaleText();
         }
         if (TextUtils.isEmpty(maxText)) {
             if (dataList == null) {
-                return "0.0000";
+                return "0.00";
             }
 
-            String max = "0.0000";
+            String max = "0.00";
             for (T data : dataList) {
                 String temp = getYAxisTextMaxLength(data);
                 if (temp.length() > max.length()) {
@@ -164,7 +175,8 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     }
 
     private String getYAxisTextMaxLength(T chartData) {
-        if (chartData == null) {
+        if (chartData == null ||
+                chartData.getData() == null) {
             return "";
         }
 
@@ -299,8 +311,8 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
                     Object obj = mChart.getDataList().get(0);
                     if (obj instanceof BaseChartData) {
                         BaseChartData temp = (BaseChartData) obj;
-                        DecimalFormat df = new DecimalFormat(temp.getConfig().getYFormat());
-                        scale.setScaleText(df.format(maxYValue - i * scaleValueBlank));
+                        scale.setScaleText(temp.getConfig().getYValueFormatter().format(
+                                maxYValue - i * scaleValueBlank));
                     }
                 }
             } catch (Exception e) {
@@ -312,24 +324,26 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     }
 
     private void measureXAxisScale() {
+        float margin = mChart.getxAxis().getScaleMargin();
         int grid = mChart.getxAxis().getGrid();
-        float width = mChart.getxAxis().getEndPos().x - mChart.getxAxis().getStartPos().x;
+        float width = mChart.getxAxis().getEndPos().x -
+                mChart.getxAxis().getStartPos().x - margin * 2;
         float blank = width / grid;
 
         List<Scale> scales = mChart.getxAxis().getScales();
         scales.clear();
-        for (int i = 1; i < grid; i++) {
+        for (int i = 0; i <= grid; i++) {
             PointF startPos = new PointF();
             PointF endPos = new PointF();
 
-            startPos.x = mChart.getxAxis().getStartPos().x + i * blank;
-            endPos.x = mChart.getxAxis().getStartPos().x + i * blank;
+            startPos.x = mChart.getxAxis().getStartPos().x + i * blank + margin;
+            endPos.x = mChart.getxAxis().getStartPos().x + i * blank + margin;
 
             if (mChart.getMarginTextSize() > 0) {
                 startPos.y = mChart.getyAxis().getStartPos().y +
-                        mChart.getMarginTextSize() + BaseChart.getBLANK() * 2;
+                        mChart.getMarginTextSize() + BaseChart.BLANK;
                 endPos.y = mChart.getyAxis().getEndPos().y -
-                        (mChart.getMarginTextSize() + BaseChart.getBLANK() * 2);
+                        (mChart.getMarginTextSize() + BaseChart.BLANK);
             } else {
                 startPos.y = mChart.getyAxis().getStartPos().y;
                 endPos.y = mChart.getyAxis().getEndPos().y;
@@ -344,10 +358,21 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
                 Object temp1 = mChart.getDataList().get(0);
                 if (temp1 instanceof BaseChartData) {
                     BaseChartData dataZero = (BaseChartData) temp1;
-                    if (dataZero.getData() != null &&
-                            dataZero.getData().size() >= grid) {
-                        Object temp = dataZero.getData().get(
-                                dataZero.getData().size() / grid * i);
+                    if (dataZero.getData() != null) {
+                        int tempIndex = 0;
+                        if (dataZero.getData().size() >= grid) {
+                            tempIndex = dataZero.getData().size() / grid * i;
+                            if (tempIndex >= dataZero.getData().size()) {
+                                tempIndex = dataZero.getData().size() - 1;
+                            }
+                        } else {
+                            tempIndex = (int) (i / (float) grid);
+                            if (tempIndex > dataZero.getData().size() - 1) {
+                                tempIndex = dataZero.getData().size() - 1;
+                            }
+                        }
+
+                        Object temp = dataZero.getData().get(tempIndex);
                         if (temp instanceof BaseEntity) {
                             scale.setScaleText(((BaseEntity) temp).getxValue());
                         }
@@ -388,7 +413,7 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
 
                         if (mChart.getMarginTextSize() > 0) {
                             scalePos.y += mChart.getMarginTextSize()
-                                    + BaseChart.getBLANK() * 2;
+                                    + BaseChart.getBLANK();
                         }
 
                         switch (mChart.getxAxis().getTextGravity()) {

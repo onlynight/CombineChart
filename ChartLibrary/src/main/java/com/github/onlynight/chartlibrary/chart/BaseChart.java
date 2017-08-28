@@ -85,6 +85,10 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
     private String mMaxYAxisScaleText = "";
 
     public BaseChart() {
+        this(false);
+    }
+
+    public BaseChart(boolean isClipContainer) {
         this.mBorder = new Border();
         this.mYAxis = new Axis();
         this.mYAxis.setPosition(Axis.POSITION_LEFT);
@@ -92,6 +96,17 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         this.mXAxis.setPosition(Axis.POSITION_BOTTOM);
         this.mDataList = new ArrayList<>();
         this.mRender = createChartRender();
+        this.mRender.setIsClipContainer(isClipContainer);
+    }
+
+    public void setIsClipContainer(boolean isClipContainer) {
+        if (mRender != null) {
+            mRender.setIsClipContainer(isClipContainer);
+        }
+    }
+
+    public boolean isClipContainer() {
+        return mRender != null && mRender.isClipContainer();
     }
 
     /**

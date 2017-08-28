@@ -96,8 +96,8 @@ public class LinePartRender extends BasePartRender {
         }
 
         LineEntity entity = entities.get(index);
-        float y = (float) ((entity.getY() - minValue) / valueRange * chartHeight)
-                + scales.get(0).getStartPos().y;
+        float y = scales.get(0).getStartPos().y +
+                chartHeight - (float) ((entity.getY() - minValue) / valueRange * chartHeight);
         float x;
         switch (mChart.getyAxis().getPosition()) {
             case Axis.POSITION_RIGHT:
