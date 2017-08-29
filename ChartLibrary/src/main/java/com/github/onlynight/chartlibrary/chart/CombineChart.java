@@ -11,6 +11,13 @@ import com.github.onlynight.chartlibrary.render.CombineChartRender;
 
 public class CombineChart extends BaseChart<BaseChartData, CombineChartRender> {
 
+    public CombineChart() {
+    }
+
+    public CombineChart(boolean isClipContainer) {
+        super(isClipContainer);
+    }
+
     @Override
     protected CombineChartRender createChartRender() {
         return new CombineChartRender(this);

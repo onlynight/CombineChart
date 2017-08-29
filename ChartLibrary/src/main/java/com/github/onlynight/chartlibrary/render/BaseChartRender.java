@@ -32,6 +32,7 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     protected Path mContainerPath;
 
     private boolean mIsClipContainer = false;
+    private boolean mIsAutoZoomYAxis = false;
 
     public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
@@ -48,6 +49,10 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
 
     public void onMeasure() {
         measureBorder();
+        measureAxisPart();
+    }
+
+    private void measureAxisPart() {
         measureAxis();
         measureAxisScale();
     }
@@ -629,14 +634,26 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
 
     @Override
     public void setScale(float mScale) {
-        cutBarEntities();
-        onMeasure();
+        if (mIsAutoZoomYAxis) {
+            cutBarEntities();
+            measureAxisPart();
+        }
     }
 
     @Override
     public void setxDelta(float xDelta) {
-        cutBarEntities();
-        onMeasure();
+        if (mIsAutoZoomYAxis) {
+            cutBarEntities();
+            measureAxisPart();
+        }
+    }
+
+    public boolean isAutoZoomYAxis() {
+        return mIsAutoZoomYAxis;
+    }
+
+    public void setIsAutoZoomYAxis(boolean isAutoZoomYAxis) {
+        this.mIsAutoZoomYAxis = isAutoZoomYAxis;
     }
 
     private void cutBarEntities() {

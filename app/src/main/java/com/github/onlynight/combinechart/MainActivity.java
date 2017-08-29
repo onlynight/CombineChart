@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private CombineChart generateCombineChart3() {
-        return mKLineChartFactory.generateVolChart();
+        return mKLineChartFactory.generateVolChart1();
     }
 
     @Override

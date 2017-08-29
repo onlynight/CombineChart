@@ -109,6 +109,16 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         return mRender != null && mRender.isClipContainer();
     }
 
+    public boolean isAutoZoomYAxis() {
+        return mRender != null && mRender.isAutoZoomYAxis();
+    }
+
+    public void setIsAutoZoomYAxis(boolean isAutoZoomYAxis) {
+        if (mRender != null) {
+            mRender.setIsAutoZoomYAxis(isAutoZoomYAxis);
+        }
+    }
+
     /**
      * on measure chart part proc
      */

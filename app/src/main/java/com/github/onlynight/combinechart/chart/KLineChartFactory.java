@@ -31,17 +31,18 @@ public class KLineChartFactory {
     }
 
     public CombineChart generateKLineChart() {
-        CombineChart candleChart = new CombineChart();
-        candleChart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
-        candleChart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
+        CombineChart chart = new CombineChart(true);
+        chart.setIsAutoZoomYAxis(true);
+        chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
+        chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         CandleStickChartData data = mKLineRepository.getCandleStickChartData();
         data.getConfig().setAutoWidth(false);
-        candleChart.addData(data);
-        candleChart.addData(mKLineRepository.getMa5LineChartData());
-        candleChart.addData(mKLineRepository.getMa10LineChartData());
-        candleChart.addData(mKLineRepository.getMa20LineChartData());
+        chart.addData(data);
+        chart.addData(mKLineRepository.getMa5LineChartData());
+//        chart.addData(mKLineRepository.getMa10LineChartData());
+        chart.addData(mKLineRepository.getMa20LineChartData());
 
-        Axis y = candleChart.getyAxis();
+        Axis y = chart.getyAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -51,7 +52,7 @@ public class KLineChartFactory {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = candleChart.getxAxis();
+        Axis x = chart.getxAxis();
         x.setPosition(Axis.POSITION_TOP);
         x.setColor(Color.BLACK);
         x.setWidth(1);
@@ -61,24 +62,25 @@ public class KLineChartFactory {
         x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
         x.setTextColor(Color.BLACK);
 
-        Border border = candleChart.getBorder();
+        Border border = chart.getBorder();
         border.setWidth(1);
         border.setHasBottom(false);
         border.setHasRight(false);
         x.setHasScaleLine(false);
         border.setColor(Color.GRAY);
 
-        return candleChart;
+        return chart;
     }
 
     public CombineChart generateVolChart() {
-        CombineChart chart = new CombineChart();
+        CombineChart chart = new CombineChart(true);
+        chart.setIsAutoZoomYAxis(false);
         chart.setWeight(0.5f);
         chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
         chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         chart.addData(mKLineRepository.getVolBarChartData());
         chart.addData(mKLineRepository.getVolMA5LineChartData());
-        chart.addData(mKLineRepository.getVolMA10LineChartData());
+//        chart.addData(mKLineRepository.getVolMA10LineChartData());
         chart.addData(mKLineRepository.getVolMA20LineChartData());
 
         Axis y = chart.getyAxis();
@@ -106,6 +108,46 @@ public class KLineChartFactory {
         border.setHasBottom(false);
         border.setHasRight(false);
         x.setHasScaleLine(false);
+        border.setColor(Color.GRAY);
+
+        return chart;
+    }
+
+    public CombineChart generateVolChart1() {
+        CombineChart chart = new CombineChart(true);
+        chart.setIsAutoZoomYAxis(false);
+        chart.setWeight(0.5f);
+        chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
+        chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
+        chart.addData(mKLineRepository.getVolBarChartData());
+        chart.addData(mKLineRepository.getVolMA5LineChartData());
+//        chart.addData(mKLineRepository.getVolMA10LineChartData());
+        chart.addData(mKLineRepository.getVolMA20LineChartData());
+
+        Axis y = chart.getyAxis();
+        y.setPosition(Axis.POSITION_RIGHT);
+        y.setColor(Color.BLACK);
+        y.setWidth(1);
+        y.setLineType(Axis.LINE_TYPE_DASH);
+        y.setTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
+        y.setGrid(3);
+        y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
+        y.setTextColor(Color.BLACK);
+
+        Axis x = chart.getxAxis();
+        x.setPosition(Axis.POSITION_BOTTOM);
+        x.setColor(Color.BLACK);
+        x.setWidth(1);
+        x.setTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
+        x.setHasLine(true);
+        x.setHasScaleText(true);
+        x.setHasScaleLine(false);
+        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setTextColor(Color.BLACK);
+
+        Border border = chart.getBorder();
+        border.setWidth(1);
+        border.setHasRight(false);
         border.setColor(Color.GRAY);
 
         return chart;
