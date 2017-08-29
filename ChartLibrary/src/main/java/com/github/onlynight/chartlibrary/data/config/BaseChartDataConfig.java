@@ -10,7 +10,7 @@ public abstract class BaseChartDataConfig {
 
     private int mColor;
     private float mStrokeWidth;
-    private float mBarWidth = 10f;
+    private float mBarWidth = 15f;
     private boolean mIsAutoWidth = false;
     private ValueFormatter mXValueFormatter;
     private ValueFormatter mYValueFormatter;

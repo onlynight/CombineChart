@@ -33,6 +33,7 @@ public class SingleChartsRecyclerAdapter extends RecyclerView.Adapter<SingleChar
     public void onBindViewHolder(ViewHolder holder, int position) {
         CombineChart chart = mCharts.get(position);
         holder.singleChartView.setChart(chart);
+        holder.singleChartView.setOperatable(false);
     }
 
     @Override

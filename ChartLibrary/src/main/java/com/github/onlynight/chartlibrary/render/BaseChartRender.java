@@ -372,6 +372,10 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
                             }
                         }
 
+                        if (tempIndex < 0) {
+                            tempIndex = 0;
+                        }
+
                         Object temp = dataZero.getData().get(tempIndex);
                         if (temp instanceof BaseEntity) {
                             scale.setScaleText(((BaseEntity) temp).getxValue());
@@ -641,12 +645,12 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
                 if (temp instanceof BaseChartData) {
                     BaseChartData data = (BaseChartData) temp;
                     int startIndex = 0;
-                    int endIndex = 0;
+                    int endIndex = data.getData().size() - 1;
 
                     BaseEntity temp1 = null;
                     for (int i = 0; i < data.getData().size(); i++) {
                         temp1 = (BaseEntity) data.getData().get(i);
-                        if (temp1.getX() <= mChart.getxAxis().getStartPos().x) {
+                        if (temp1.getX() >= mChart.getxAxis().getStartPos().x) {
                             startIndex = i;
                             break;
                         }

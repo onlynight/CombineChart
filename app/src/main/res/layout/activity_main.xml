@@ -7,47 +7,12 @@
     android:orientation="vertical"
     tools:context="com.github.onlynight.combinechart.MainActivity">
 
-    <ScrollView
+    <com.github.onlynight.chartlibrary.view.CombineChartView
+        android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.github.onlynight.chartlibrary.view.CombineChartView
-                android:id="@+id/chart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <SeekBar
-                    android:id="@+id/seekbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="100"/>
-
-                <SeekBar
-                    android:id="@+id/seekbar1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:max="1000"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

@@ -126,8 +126,11 @@ public class CandleStickPartRender extends BasePartRender {
                         y2 += 2;
                     }
 
-                    canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
-                    canvas.drawLine(tempX, highY, tempX, lowY, mGraphPaint);
+                    if (x1 >= mChart.getxAxis().getStartPos().x &&
+                            x1 <= mChart.getxAxis().getEndPos().x) {
+                        canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
+                        canvas.drawLine(tempX, highY, tempX, lowY, mGraphPaint);
+                    }
 
 //                    canvas.drawText("a", x1, y1, mTextPaint);
 

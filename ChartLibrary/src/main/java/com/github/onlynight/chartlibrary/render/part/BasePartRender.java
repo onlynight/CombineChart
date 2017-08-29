@@ -13,6 +13,8 @@ import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 public abstract class BasePartRender implements IChartInterface {
 
+    public static final int DEFAULT_BAR_WIDTH = 2;
+
     protected BaseChart mChart;
 
     protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

@@ -38,8 +38,8 @@ public class BarChartRender extends BaseChartRender<BarChartData> {
 
     @Override
     public void setScale(float mScale) {
-        super.setScale(mScale);
         mBarPartRender.setScale(mScale);
+        super.setScale(mScale);
     }
 
     @Override
@@ -49,8 +49,8 @@ public class BarChartRender extends BaseChartRender<BarChartData> {
 
     @Override
     public void setxDelta(float xDelta) {
-        super.setxDelta(xDelta);
         mBarPartRender.setxDelta(xDelta);
+        super.setxDelta(xDelta);
     }
 
 }

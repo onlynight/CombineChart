@@ -67,6 +67,7 @@ public class CombineChartView extends View implements IChartInterface {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        onLayoutChart(getWidth(), getHeight());
     }
 
     private void onLayoutChart(int width, int height) {
@@ -107,9 +108,6 @@ public class CombineChartView extends View implements IChartInterface {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        onLayoutChart(width, height);
         for (BaseChart chart : mCharts) {
             chart.onMeasure();
         }
@@ -157,6 +155,10 @@ public class CombineChartView extends View implements IChartInterface {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mIsOperatable) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                setxDelta(getxDelta());
+                invalidate();
+            }
             int count = event.getPointerCount();
             if (count <= 1) {
                 return mDetector.onTouchEvent(event);
@@ -193,6 +195,8 @@ public class CombineChartView extends View implements IChartInterface {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//            setxDelta(getxDelta() + velocityX / 10);
+//            invalidate();
             return true;
         }
 

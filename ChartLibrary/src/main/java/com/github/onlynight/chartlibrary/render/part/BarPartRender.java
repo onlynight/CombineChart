@@ -18,8 +18,6 @@ import java.util.List;
 
 public class BarPartRender extends BasePartRender {
 
-    private static final int BAR_BLANK = 2;
-
     public BarPartRender(BaseChart chart) {
         super(chart);
     }
@@ -104,7 +102,10 @@ public class BarPartRender extends BasePartRender {
                     mGraphPaint.setColor(temp.getColor());
                     temp.setX(x1);
 
-                    canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
+                    if (x1 >= mChart.getxAxis().getStartPos().x &&
+                            x1 <= mChart.getxAxis().getEndPos().x) {
+                        canvas.drawRect(x1 + DEFAULT_BAR_WIDTH, y1, x2, y2, mGraphPaint);
+                    }
                 }
             }
         }
