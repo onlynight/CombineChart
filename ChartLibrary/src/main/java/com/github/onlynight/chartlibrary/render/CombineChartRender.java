@@ -48,10 +48,10 @@ public class CombineChartRender extends BaseChartRender<BaseChartData> {
 
     @Override
     public void setScale(float mScale) {
-        super.setScale(mScale);
         mLinePartRender.setScale(mScale);
         mBarPartRender.setScale(mScale);
         mCandleStickPartRender.setScale(mScale);
+        super.setScale(mScale);
     }
 
     @Override
@@ -61,10 +61,10 @@ public class CombineChartRender extends BaseChartRender<BaseChartData> {
 
     @Override
     public void setxDelta(float xDelta) {
-        super.setxDelta(xDelta);
         mBarPartRender.setxDelta(xDelta);
         mLinePartRender.setxDelta(xDelta);
         mCandleStickPartRender.setxDelta(xDelta);
+        super.setxDelta(xDelta);
     }
 
 }

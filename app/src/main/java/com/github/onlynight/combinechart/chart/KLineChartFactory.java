@@ -39,7 +39,7 @@ public class KLineChartFactory {
         data.getConfig().setAutoWidth(false);
         chart.addData(data);
         chart.addData(mKLineRepository.getMa5LineChartData());
-//        chart.addData(mKLineRepository.getMa10LineChartData());
+        chart.addData(mKLineRepository.getMa10LineChartData());
         chart.addData(mKLineRepository.getMa20LineChartData());
 
         Axis y = chart.getyAxis();
@@ -80,7 +80,7 @@ public class KLineChartFactory {
         chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         chart.addData(mKLineRepository.getVolBarChartData());
         chart.addData(mKLineRepository.getVolMA5LineChartData());
-//        chart.addData(mKLineRepository.getVolMA10LineChartData());
+        chart.addData(mKLineRepository.getVolMA10LineChartData());
         chart.addData(mKLineRepository.getVolMA20LineChartData());
 
         Axis y = chart.getyAxis();
@@ -142,7 +142,7 @@ public class KLineChartFactory {
         x.setHasLine(true);
         x.setHasScaleText(true);
         x.setHasScaleLine(false);
-        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         x.setTextColor(Color.BLACK);
 
         Border border = chart.getBorder();
@@ -175,7 +175,7 @@ public class KLineChartFactory {
         x.setTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
         x.setHasLine(false);
         x.setHasScaleText(false);
-        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         x.setTextColor(Color.BLACK);
 
         Border border = chart.getBorder();

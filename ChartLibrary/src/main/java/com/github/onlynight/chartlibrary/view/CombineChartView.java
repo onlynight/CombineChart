@@ -11,6 +11,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.data.BaseChartData;
+import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 import java.util.ArrayList;
@@ -133,9 +135,16 @@ public class CombineChartView extends View implements IChartInterface {
 
     @Override
     public void setScale(float mScale) {
+        if (mScale >= 5) {
+            mScale = 5;
+        }
+
+        if (mScale <= 0.5) {
+            mScale = 0.5f;
+        }
         this.mScale = mScale;
         for (BaseChart chart : mCharts) {
-            chart.setScale(mScale);
+            chart.setScale(this.mScale);
         }
     }
 
@@ -146,10 +155,34 @@ public class CombineChartView extends View implements IChartInterface {
 
     @Override
     public void setxDelta(float xDelta) {
+        if (xDelta <= 0) {
+            xDelta = 0;
+        }
+
+        int max = calculateMax();
+
+        if (xDelta >= max) {
+            xDelta = max;
+        }
+
         this.xDelta = xDelta;
         for (BaseChart chart : mCharts) {
-            chart.setxDelta(xDelta);
+            chart.setxDelta(this.xDelta);
         }
+    }
+
+    private int calculateMax() {
+        try {
+            BaseChart chart = mCharts.get(0);
+            BaseChartData chartData = (BaseChartData) chart.getDataList().get(0);
+            BaseChartDataConfig config = chartData.getConfig();
+            int size = chartData.getData().size();
+            return (int) (config.getBarWidth() * size * mScale - chart.getxAxis().getEndPos().x
+                    + chart.getxAxis().getStartPos().x);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
@@ -168,7 +201,6 @@ public class CombineChartView extends View implements IChartInterface {
         } else {
             return super.onTouchEvent(event);
         }
-//        this.mScaleDetector.onTouchEvent(event);
     }
 
     public void clearCharts() {
@@ -205,6 +237,7 @@ public class CombineChartView extends View implements IChartInterface {
             float currentScale = detector.getScaleFactor();
             float scale = mLastScale * currentScale;
             setScale(scale);
+            setxDelta(getxDelta());
             invalidate();
             return false;
         }

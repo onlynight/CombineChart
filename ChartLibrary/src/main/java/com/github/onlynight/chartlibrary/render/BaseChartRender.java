@@ -34,9 +34,15 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     private boolean mIsClipContainer = false;
     private boolean mIsAutoZoomYAxis = false;
 
+    private OnResetExtremeValueListener onResetExtremeValueListener;
+
     public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
         this.mContainerPath = new Path();
+    }
+
+    public void setOnResetExtremeValueListener(OnResetExtremeValueListener onResetExtremeValueListener) {
+        this.onResetExtremeValueListener = onResetExtremeValueListener;
     }
 
     public boolean isClipContainer() {
@@ -636,6 +642,9 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     public void setScale(float mScale) {
         if (mIsAutoZoomYAxis) {
             cutBarEntities();
+            if (onResetExtremeValueListener != null) {
+                onResetExtremeValueListener.onResetExtremeValue();
+            }
             measureAxisPart();
         }
     }
@@ -644,6 +653,9 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
     public void setxDelta(float xDelta) {
         if (mIsAutoZoomYAxis) {
             cutBarEntities();
+            if (onResetExtremeValueListener != null) {
+                onResetExtremeValueListener.onResetExtremeValue();
+            }
             measureAxisPart();
         }
     }
@@ -690,6 +702,12 @@ public abstract class BaseChartRender<T extends BaseChartData> implements
                 }
             }
         }
+    }
+
+    public interface OnResetExtremeValueListener {
+
+        void onResetExtremeValue();
+
     }
 
 }

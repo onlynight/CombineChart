@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
+import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 /**

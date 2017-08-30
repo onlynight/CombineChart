@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 public abstract class BaseChart<T extends BaseChartData, Render extends BaseChartRender<T>> implements
-        IChartInterface {
+        IChartInterface, BaseChartRender.OnResetExtremeValueListener {
 
     /**
      * common blank
@@ -319,7 +319,6 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         if (mRender != null) {
             mRender.setScale(mScale);
         }
-
         resetExtremeValue();
     }
 
@@ -336,13 +335,23 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         if (mRender != null) {
             mRender.setxDelta(xDelta);
         }
-
         resetExtremeValue();
     }
 
+    @Override
+    public void onResetExtremeValue() {
+//        resetExtremeValue();
+    }
+
     private void resetExtremeValue() {
-        for (T data : mDataList) {
-            setExtremeValue(data);
+//        for (T data : mDataList) {
+//            setExtremeValue(data);
+//        }
+
+        try {
+            setExtremeValue(mDataList.get(0));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
