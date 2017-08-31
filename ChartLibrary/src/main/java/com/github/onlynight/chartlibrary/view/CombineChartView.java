@@ -2,6 +2,7 @@ package com.github.onlynight.chartlibrary.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
@@ -32,8 +33,13 @@ public class CombineChartView extends View implements IChartInterface {
     private ScaleGestureDetector mScaleDetector;
 
     private MyGestureListener gestureListener;
+    private List<Double> mChartsHeight = new ArrayList<>();
 
     private boolean mIsOperatable = true;
+
+    private float mLastScale = 1f;
+
+    private PointF mTouchPoint;
 
     public CombineChartView(Context context) {
         super(context);
@@ -55,6 +61,8 @@ public class CombineChartView extends View implements IChartInterface {
         gestureListener = new MyGestureListener();
         mDetector = new GestureDetectorCompat(getContext(), gestureListener);
         mScaleDetector = new ScaleGestureDetector(getContext(), gestureListener);
+
+        mTouchPoint = new PointF(-1, -1);
     }
 
     public void addChart(BaseChart chart) {
@@ -63,8 +71,6 @@ public class CombineChartView extends View implements IChartInterface {
         }
         mCharts.add(chart);
     }
-
-    private List<Double> mChartsHeight = new ArrayList<>();
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
@@ -134,17 +140,29 @@ public class CombineChartView extends View implements IChartInterface {
     }
 
     @Override
-    public void setScale(float mScale) {
-        if (mScale >= 5) {
-            mScale = 5;
+    public void setScale(float scale) {
+        if (scale >= 5) {
+            scale = 5;
         }
 
-        if (mScale <= 0.5) {
-            mScale = 0.5f;
+        if (scale <= 0.5) {
+            scale = 0.5f;
         }
-        this.mScale = mScale;
-        for (BaseChart chart : mCharts) {
-            chart.setScale(this.mScale);
+
+        if (mCharts != null && mCharts.size() > 0) {
+            if (!mCharts.get(0).isCanZoomLessThanNormal()) {
+                if (scale <= 1) {
+                    scale = 1;
+                }
+            }
+        }
+
+        this.mScale = scale;
+
+        if (mCharts != null) {
+            for (BaseChart chart : mCharts) {
+                chart.setScale(this.mScale);
+            }
         }
     }
 
@@ -171,6 +189,26 @@ public class CombineChartView extends View implements IChartInterface {
         }
     }
 
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        // do nothing
+        return false;
+    }
+
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        // do nothing
+    }
+
+    @Override
+    public void setCrossPoint(PointF crossPoint) {
+        if (mCharts != null) {
+            for (BaseChart chart : mCharts) {
+                chart.setCrossPoint(crossPoint);
+            }
+        }
+    }
+
     private int calculateMax() {
         try {
             BaseChart chart = mCharts.get(0);
@@ -191,6 +229,9 @@ public class CombineChartView extends View implements IChartInterface {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 setxDelta(getxDelta());
                 invalidate();
+            } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                mTouchPoint.set(event.getX(), event.getY());
+                setCrossPoint(mTouchPoint);
             }
             int count = event.getPointerCount();
             if (count <= 1) {
@@ -214,12 +255,13 @@ public class CombineChartView extends View implements IChartInterface {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            e.getAction();
             return true;
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            mTouchPoint.set(-1, -1);
+            setCrossPoint(mTouchPoint);
             setxDelta(getxDelta() - distanceX);
             invalidate();
             return true;
@@ -234,6 +276,7 @@ public class CombineChartView extends View implements IChartInterface {
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+            mTouchPoint.set(-1, -1);
             float currentScale = detector.getScaleFactor();
             float scale = mLastScale * currentScale;
             setScale(scale);
@@ -253,13 +296,36 @@ public class CombineChartView extends View implements IChartInterface {
         }
     }
 
-    private float mLastScale = 1f;
-
     public boolean isOperatable() {
         return mIsOperatable;
     }
 
     public void setOperatable(boolean operatable) {
         mIsOperatable = operatable;
+    }
+
+    public void setCrossColor(int crossColor) {
+        if (mCharts != null) {
+            for (BaseChart chart : mCharts) {
+                chart.setCrossColor(crossColor);
+            }
+        }
+    }
+
+    public void setCrossLineWidth(float crossLineWidth) {
+        if (mCharts != null) {
+            for (BaseChart chart : mCharts) {
+                chart.setCrossLineWidth(crossLineWidth);
+            }
+        }
+    }
+
+    @Override
+    public void setCrossBorderColor(int color) {
+        if (mCharts != null) {
+            for (BaseChart chart : mCharts) {
+                chart.setCrossBorderColor(color);
+            }
+        }
     }
 }

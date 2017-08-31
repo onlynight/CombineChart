@@ -15,4 +15,14 @@ public class LineChart extends BaseChart<LineChartData, LineChartRender> {
         return new LineChartRender(this);
     }
 
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        return mRender.isCanZoomLessThanNormal();
+    }
+
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
+    }
+
 }

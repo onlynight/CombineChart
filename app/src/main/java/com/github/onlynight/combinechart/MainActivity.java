@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mCombineChartView.setOperatable(true);
         mCombineChartView.addChart(generateCombineChart1());
         mCombineChartView.addChart(generateCombineChart2());
-        mCombineChartView.addChart(generateCombineChart3());
+//        mCombineChartView.addChart(generateCombineChart3());
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

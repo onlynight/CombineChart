@@ -59,6 +59,16 @@ public class CombineChart extends BaseChart<BaseChartData, CombineChartRender> {
         }
     }
 
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        return mRender.isCanZoomLessThanNormal();
+    }
+
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
+    }
+
     private double getMaxDelta(double max) {
         if (max > 0.1) {
             return 0.1;

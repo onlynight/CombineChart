@@ -25,28 +25,6 @@ public class CandleStickPartRender extends BasePartRender {
     }
 
     @Override
-    public void onMeasure() {
-        measureCandleChartItemWidth();
-    }
-
-    private void measureCandleChartItemWidth() {
-        if (mChart != null && mChart.getDataList() != null) {
-            for (Object temp : mChart.getDataList()) {
-                if (temp instanceof CandleStickChartData) {
-                    CandleStickChartData data = (CandleStickChartData) temp;
-                    CandleStickChartDataConfig config = data.getConfig();
-                    if (config.isAutoWidth() &&
-                            data.getData() != null) {
-                        float chartWidth = mChart.getxAxis().getEndPos().x -
-                                mChart.getxAxis().getStartPos().x;
-                        config.setBarWidth(chartWidth / data.getData().size());
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void onDrawChart(Canvas canvas) {
         drawCandleStickChart(canvas);
     }

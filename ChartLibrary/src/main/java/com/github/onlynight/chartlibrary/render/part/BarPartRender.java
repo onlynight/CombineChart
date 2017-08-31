@@ -23,31 +23,6 @@ public class BarPartRender extends BasePartRender {
     }
 
     @Override
-    public void onMeasure() {
-        measureBarWidth();
-    }
-
-    private void measureBarWidth() {
-        if (mChart != null && mChart.getDataList() != null) {
-            float chartWidth = 0;
-            for (Object temp : mChart.getDataList()) {
-                if (temp instanceof BarChartData) {
-                    BarChartData data = (BarChartData) temp;
-                    BarChartDataConfig config = data.getConfig();
-                    if (config.isAutoWidth()) {
-                        Axis xAxis = mChart.getxAxis();
-                        chartWidth = xAxis.getEndPos().x - xAxis.getStartPos().x;
-                        if (data.getData() != null &&
-                                data.getData().size() > 0) {
-                            config.setBarWidth(chartWidth / (float) data.getData().size());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
     public void onDrawChart(Canvas canvas) {
         drawBar(canvas);
     }

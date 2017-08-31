@@ -53,20 +53,20 @@ public class KLineChartFactory {
         y.setTextColor(Color.BLACK);
 
         Axis x = chart.getxAxis();
-        x.setPosition(Axis.POSITION_TOP);
+        x.setPosition(Axis.POSITION_BOTTOM);
         x.setColor(Color.BLACK);
         x.setWidth(1);
         x.setTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
-        x.setHasLine(false);
-        x.setHasScaleText(false);
-        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setHasLine(true);
+        x.setHasScaleText(true);
+        x.setHasScaleLine(false);
+        x.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         x.setTextColor(Color.BLACK);
 
         Border border = chart.getBorder();
         border.setWidth(1);
         border.setHasBottom(false);
         border.setHasRight(false);
-        x.setHasScaleLine(false);
         border.setColor(Color.GRAY);
 
         return chart;
@@ -139,8 +139,8 @@ public class KLineChartFactory {
         x.setColor(Color.BLACK);
         x.setWidth(1);
         x.setTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
-        x.setHasLine(true);
-        x.setHasScaleText(true);
+        x.setHasLine(false);
+        x.setHasScaleText(false);
         x.setHasScaleLine(false);
         x.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         x.setTextColor(Color.BLACK);

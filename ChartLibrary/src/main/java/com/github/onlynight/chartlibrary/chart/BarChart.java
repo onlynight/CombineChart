@@ -18,4 +18,15 @@ public class BarChart extends BaseChart<BarChartData, BarChartRender> {
     public void setxDelta(float xDelta) {
         super.setxDelta(xDelta);
     }
+
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        return mRender.isCanZoomLessThanNormal();
+    }
+
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
+    }
+
 }

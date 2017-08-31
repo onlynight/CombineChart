@@ -2,6 +2,7 @@ package com.github.onlynight.chartlibrary.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PointF;
 
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
@@ -17,7 +18,7 @@ import java.util.List;
  * Created by lion on 2017/8/11.
  */
 
-public abstract class BaseChart<T extends BaseChartData, Render extends BaseChartRender<T>> implements
+public abstract class BaseChart<T extends BaseChartData, Render extends BaseChartRender> implements
         IChartInterface, BaseChartRender.OnResetExtremeValueListener {
 
     /**
@@ -315,9 +316,9 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
     }
 
     @Override
-    public void setScale(float mScale) {
+    public void setScale(float scale) {
         if (mRender != null) {
-            mRender.setScale(mScale);
+            mRender.setScale(scale);
         }
         resetExtremeValue();
     }
@@ -340,7 +341,6 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
 
     @Override
     public void onResetExtremeValue() {
-//        resetExtremeValue();
     }
 
     private void resetExtremeValue() {
@@ -366,5 +366,25 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
 
     public void setMaxYAxisScaleText(String maxYAxisScaleText) {
         this.mMaxYAxisScaleText = maxYAxisScaleText;
+    }
+
+    @Override
+    public void setCrossPoint(PointF crossPoint) {
+        mRender.setCrossPoint(crossPoint);
+    }
+
+    @Override
+    public void setCrossColor(int crossColor) {
+        mRender.setCrossColor(crossColor);
+    }
+
+    @Override
+    public void setCrossLineWidth(float crossLineWidth) {
+        mRender.setCrossLineWidth(crossLineWidth);
+    }
+
+    @Override
+    public void setCrossBorderColor(int color) {
+        mRender.setCrossBorderColor(color);
     }
 }

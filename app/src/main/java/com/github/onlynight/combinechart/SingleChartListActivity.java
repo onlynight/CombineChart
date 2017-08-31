@@ -15,6 +15,7 @@ import com.github.onlynight.chartlibrary.data.config.CandleStickChartDataConfig;
 import com.github.onlynight.chartlibrary.data.config.LineChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.CandleStickEntity;
 import com.github.onlynight.chartlibrary.data.entity.LineEntity;
+import com.github.onlynight.combinechart.formatter.TimeValueFormatter;
 import com.github.onlynight.combinechart.formatter.YValueFormatter;
 import com.github.onlynight.combinechart.repository.DataRepository;
 
@@ -62,6 +63,7 @@ public class SingleChartListActivity extends AppCompatActivity {
         YValueFormatter formatter = new YValueFormatter();
         formatter.setFormat("0.00000000");
         config.setYValueFormatter(formatter);
+        config.setXValueFormatter(new TimeValueFormatter());
 
         CandleStickChartData data = new CandleStickChartData(config);
         List<CandleStickEntity> entities = mDataRepository.createLocalCandleStickData(90);
@@ -85,18 +87,18 @@ public class SingleChartListActivity extends AppCompatActivity {
         y.setTextColor(Color.BLACK);
 
         Axis x = candleChart.getxAxis();
-        x.setPosition(Axis.POSITION_TOP);
+        x.setPosition(Axis.POSITION_BOTTOM);
         x.setColor(Color.BLACK);
         x.setWidth(1);
         x.setTextSize(getResources().getDimension(R.dimen.textSize10));
-        x.setHasLine(false);
-        x.setHasScaleText(false);
-        x.setTextGravity(Axis.TEXT_GRAVITY_RIGHT);
+        x.setHasLine(true);
+        x.setHasScaleText(true);
+        x.setHasScaleLine(true);
+        x.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         x.setTextColor(Color.BLACK);
 
         Border border = candleChart.getBorder();
         border.setWidth(1);
-        x.setHasScaleLine(false);
         border.setColor(Color.GRAY);
 
         return candleChart;

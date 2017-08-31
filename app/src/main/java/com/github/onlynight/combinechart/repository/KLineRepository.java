@@ -11,6 +11,7 @@ import com.github.onlynight.chartlibrary.data.config.LineChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.BarEntity;
 import com.github.onlynight.chartlibrary.data.entity.CandleStickEntity;
 import com.github.onlynight.chartlibrary.data.entity.LineEntity;
+import com.github.onlynight.combinechart.formatter.TimeValueFormatter;
 import com.github.onlynight.combinechart.formatter.YValueFormatter;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class KLineRepository {
         YValueFormatter formatter = new YValueFormatter();
         formatter.setFormat("0.00000000");
         config.setYValueFormatter(formatter);
+        config.setXValueFormatter(new TimeValueFormatter());
 
         CandleStickChartData data = new CandleStickChartData(config);
         data.setData(candleStickEntities);
@@ -69,6 +71,7 @@ public class KLineRepository {
 
         LineChartDataConfig config = new LineChartDataConfig();
         config.setYValueFormatter(new YValueFormatter());
+        config.setXValueFormatter(new TimeValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
         config.setAutoWidth(false);
@@ -92,6 +95,7 @@ public class KLineRepository {
         YValueFormatter formatter = new YValueFormatter();
         formatter.setFormat("0.000");
         config.setYValueFormatter(formatter);
+        config.setXValueFormatter(new TimeValueFormatter());
         BarChartData data = new BarChartData(config);
 
         List<BarEntity> entities = new ArrayList<>();
@@ -100,6 +104,7 @@ public class KLineRepository {
             BarEntity entity = new BarEntity();
             entity.setX(i);
             entity.setY(temp.getVol());
+            entity.setTime(temp.getTime());
             if (temp.getOpen() > temp.getClose()) {
                 entity.setColor(Color.GREEN);
             } else {
@@ -127,6 +132,7 @@ public class KLineRepository {
 
         LineChartDataConfig config = new LineChartDataConfig();
         config.setYValueFormatter(new YValueFormatter());
+        config.setXValueFormatter(new TimeValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
         config.setAutoWidth(false);

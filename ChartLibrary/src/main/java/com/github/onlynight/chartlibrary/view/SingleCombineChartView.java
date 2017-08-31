@@ -2,6 +2,7 @@ package com.github.onlynight.chartlibrary.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.PointF;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
@@ -12,8 +13,6 @@ import android.view.View;
 
 import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
-
-import java.util.List;
 
 /**
  * Created by lion on 2017/8/10.
@@ -57,36 +56,8 @@ public class SingleCombineChartView extends View implements IChartInterface {
         mChart = chart;
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
     private void onLayoutChart(int width, int height) {
         mChart.setArea(0, 0, width, height);
-    }
-
-    private double sum(List<Double> heights, int index) {
-        if (index < 0) {
-            return 0;
-        }
-
-        double total = 0;
-
-        for (int i = 0; i < index; i++) {
-            total += heights.get(i);
-        }
-
-        return total;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        int width = MeasureSpec.getSize(widthMeasureSpec);
-//        int height = MeasureSpec.getSize(heightMeasureSpec);
-//        onLayoutChart(width, height);
-//        mChart.onMeasure();
     }
 
     @Override
@@ -104,9 +75,9 @@ public class SingleCombineChartView extends View implements IChartInterface {
     }
 
     @Override
-    public void setScale(float mScale) {
-        this.mScale = mScale;
-        mChart.setScale(mScale);
+    public void setScale(float scale) {
+        this.mScale = scale;
+        mChart.setScale(scale);
     }
 
     @Override
@@ -118,6 +89,43 @@ public class SingleCombineChartView extends View implements IChartInterface {
     public void setxDelta(float xDelta) {
         this.xDelta = xDelta;
         mChart.setxDelta(xDelta);
+    }
+
+    @Deprecated
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        // do nothing
+        return false;
+    }
+
+    @Deprecated
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        // do nothing
+    }
+
+    @Deprecated
+    @Override
+    public void setCrossPoint(PointF crossPoint) {
+        // do nothing
+    }
+
+    @Deprecated
+    @Override
+    public void setCrossColor(int crossColor) {
+        // do nothing
+    }
+
+    @Deprecated
+    @Override
+    public void setCrossLineWidth(float crossLineWidth) {
+        // do nothing
+    }
+
+    @Deprecated
+    @Override
+    public void setCrossBorderColor(int color) {
+        // do nothing
     }
 
     @Override
