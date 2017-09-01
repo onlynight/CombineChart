@@ -32,6 +32,7 @@ public class KLineChartFactory {
 
     public CombineChart generateKLineChart() {
         CombineChart chart = new CombineChart(true);
+        chart.setIsShowLegend(false);
         chart.setIsAutoZoomYAxis(true);
         chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
         chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
@@ -115,13 +116,14 @@ public class KLineChartFactory {
 
     public CombineChart generateVolChart1() {
         CombineChart chart = new CombineChart(true);
+
         chart.setIsAutoZoomYAxis(false);
         chart.setWeight(0.5f);
         chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
         chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
         chart.addData(mKLineRepository.getVolBarChartData());
         chart.addData(mKLineRepository.getVolMA5LineChartData());
-//        chart.addData(mKLineRepository.getVolMA10LineChartData());
+        chart.addData(mKLineRepository.getVolMA10LineChartData());
         chart.addData(mKLineRepository.getVolMA20LineChartData());
 
         Axis y = chart.getyAxis();

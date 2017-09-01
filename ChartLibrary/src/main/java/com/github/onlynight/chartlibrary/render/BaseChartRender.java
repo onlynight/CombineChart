@@ -14,6 +14,8 @@ import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Scale;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
+import com.github.onlynight.chartlibrary.data.CandleStickChartData;
+import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
 import com.github.onlynight.chartlibrary.operate.IChartInterface;
 import com.github.onlynight.chartlibrary.render.part.BasePartRender;
@@ -42,6 +44,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
 
     private PartRender mPartRender;
     private double mYValueRange = 0;
+    private BaseChart.OnCrossPointClickListener mOnCrossPointClickListener;
 
     public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
@@ -50,6 +53,10 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     }
 
     public abstract PartRender createPartRender(BaseChart chart);
+
+    public void setOnCrossPointClickListener(BaseChart.OnCrossPointClickListener onCrossPointClickListener) {
+        this.mOnCrossPointClickListener = onCrossPointClickListener;
+    }
 
     public void setOnResetExtremeValueListener(OnResetExtremeValueListener onResetExtremeValueListener) {
         this.onResetExtremeValueListener = onResetExtremeValueListener;
@@ -112,25 +119,83 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
                     }
                 }
 
-                if (mChart.getxAxis().isHasLine()) {
-                    List<BaseEntity> entities = getSelectEntities();
-                    if (entities != null && entities.size() > 0) {
-                        textSize = mChart.getxAxis().getTextSize();
-                        mTextPaint.setTextSize(textSize);
-                        mTextPaint.setColor(Color.WHITE);
-                        long time = entities.get(0).getTime();
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        String timeStr = sdf.format(time);
-                        float width = mTextPaint.measureText(timeStr) + border * 2;
-                        float start = point.x - width / 2;
-                        float top = mChart.getxAxis().getStartPos().y;
-                        canvas.drawRect(start, top,
-                                point.x + width / 2, mChart.getBottom(), mGraphPaint);
+                List<BaseEntity> entities = getSelectEntities();
 
-                        canvas.drawText(timeStr, start + border,
-                                top + getFontHeight(mTextPaint) + border, mTextPaint);
+                if (entities != null) {
+                    drawLegend(canvas, entities);
+
+                    if (mChart.getxAxis().isHasLine()) {
+                        if (entities.size() > 0) {
+                            textSize = mChart.getxAxis().getTextSize();
+                            mTextPaint.setTextSize(textSize);
+                            mTextPaint.setColor(Color.WHITE);
+                            long time = entities.get(0).getTime();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String timeStr = sdf.format(time);
+                            float width = mTextPaint.measureText(timeStr) + border * 2;
+                            float start = point.x - width / 2;
+                            float top = mChart.getxAxis().getStartPos().y;
+                            canvas.drawRect(start, top,
+                                    point.x + width / 2, mChart.getBottom(), mGraphPaint);
+
+                            canvas.drawText(timeStr, start + border,
+                                    top + getFontHeight(mTextPaint) + border, mTextPaint);
+                        }
+                    }
+
+                    if (mOnCrossPointClickListener != null) {
+                        mOnCrossPointClickListener.onCrossPointClick(entities);
                     }
                 }
+            }
+        }
+    }
+
+    private void drawLegend(Canvas canvas, List<BaseEntity> legendEntities) {
+        if (mChart == null || mChart.getDataList() == null) {
+            return;
+        }
+
+        if (legendEntities == null) {
+            return;
+        }
+
+        if (!mChart.isShowLegend()) {
+            return;
+        }
+
+        int chartSize = mChart.getDataList().size();
+        int legendEntitiesSize = legendEntities.size();
+
+        if (chartSize != legendEntitiesSize) {
+            return;
+        }
+
+        float left = 0;
+
+        for (int i = 0; i < chartSize; i++) {
+            BaseChartData chartData = (BaseChartData) mChart.getDataList().get(i);
+            if (chartData instanceof CandleStickChartData) {
+            } else {
+                BaseChartDataConfig config = chartData.getConfig();
+                int color = config.getColor();
+                mTextPaint.setColor(color);
+                mTextPaint.setTextSize(mChart.getMarginTextSize());
+                float fontHeight = getFontHeight(mTextPaint);
+
+                BaseEntity entity = legendEntities.get(i);
+                String text = chartData.getChartName() + ":" + entity.getyValue();
+                try {
+                    text = chartData.getChartName() + ":" +
+                            chartData.getConfig().getYValueFormatter().format(entity.getY());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                canvas.drawText(text, mChart.getLeft() + BaseChart.BLANK + left,
+                        mChart.getTop() + fontHeight + BaseChart.BLANK, mTextPaint);
+
+                float width = mTextPaint.measureText(text);
+                left += width + BaseChart.BLANK * 3;
             }
         }
     }

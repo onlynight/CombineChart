@@ -28,16 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
         mCombineChartView = (CombineChartView) findViewById(R.id.chart);
         mCombineChartView.setOperatable(true);
+        mCombineChartView.setIsShowCrossPoint(true);
         mCombineChartView.addChart(generateCombineChart1());
         mCombineChartView.addChart(generateCombineChart2());
-//        mCombineChartView.addChart(generateCombineChart3());
+        mCombineChartView.addChart(generateCombineChart3());
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mCombineChartView.setxDelta(0);
                 mCombineChartView.invalidate();
             }
-        }, 100);
+        }, 200);
     }
 
     private CombineChart generateCombineChart1() {

@@ -36,6 +36,7 @@ public class CombineChartView extends View implements IChartInterface {
     private List<Double> mChartsHeight = new ArrayList<>();
 
     private boolean mIsOperatable = true;
+    private boolean mIsShowCrossPoint = true;
 
     private float mLastScale = 1f;
 
@@ -202,7 +203,7 @@ public class CombineChartView extends View implements IChartInterface {
 
     @Override
     public void setCrossPoint(PointF crossPoint) {
-        if (mCharts != null) {
+        if (mCharts != null && mIsShowCrossPoint) {
             for (BaseChart chart : mCharts) {
                 chart.setCrossPoint(crossPoint);
             }
@@ -310,6 +311,14 @@ public class CombineChartView extends View implements IChartInterface {
                 chart.setCrossColor(crossColor);
             }
         }
+    }
+
+    public boolean isShowCrossPoint() {
+        return mIsShowCrossPoint;
+    }
+
+    public void setIsShowCrossPoint(boolean isShowCrossPoint) {
+        this.mIsShowCrossPoint = isShowCrossPoint;
     }
 
     public void setCrossLineWidth(float crossLineWidth) {

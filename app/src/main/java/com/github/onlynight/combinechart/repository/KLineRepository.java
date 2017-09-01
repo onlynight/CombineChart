@@ -55,6 +55,7 @@ public class KLineRepository {
         config.setXValueFormatter(new TimeValueFormatter());
 
         CandleStickChartData data = new CandleStickChartData(config);
+        data.setChartName("KLine");
         data.setData(candleStickEntities);
 
         return data;
@@ -70,13 +71,16 @@ public class KLineRepository {
     private LineChartData generateMALineChartData(int days, int lineColor) {
 
         LineChartDataConfig config = new LineChartDataConfig();
-        config.setYValueFormatter(new YValueFormatter());
+        YValueFormatter formatter = new YValueFormatter();
+        formatter.setFormat("0.00000000");
+        config.setYValueFormatter(formatter);
         config.setXValueFormatter(new TimeValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
         config.setAutoWidth(false);
 
         LineChartData data = new LineChartData(config);
+        data.setChartName("MA" + days);
 
         List<LineEntity> entities = initMA(days, candleStickChartData);
         data.setData(entities);
@@ -91,12 +95,14 @@ public class KLineRepository {
 
         BarChartDataConfig config = new BarChartDataConfig();
         config.setStrokeWidth(1);
+        config.setColor(Color.RED);
         config.setAutoWidth(false);
         YValueFormatter formatter = new YValueFormatter();
         formatter.setFormat("0.000");
         config.setYValueFormatter(formatter);
         config.setXValueFormatter(new TimeValueFormatter());
         BarChartData data = new BarChartData(config);
+        data.setChartName("VOL");
 
         List<BarEntity> entities = new ArrayList<>();
         int i = 0;
@@ -131,13 +137,16 @@ public class KLineRepository {
         }
 
         LineChartDataConfig config = new LineChartDataConfig();
-        config.setYValueFormatter(new YValueFormatter());
+        YValueFormatter formatter = new YValueFormatter();
+        formatter.setFormat("0.000");
+        config.setYValueFormatter(formatter);
         config.setXValueFormatter(new TimeValueFormatter());
         config.setColor(lineColor);
         config.setStrokeWidth(2f);
         config.setAutoWidth(false);
 
         LineChartData data = new LineChartData(config);
+        data.setChartName("MA" + days);
         List<LineEntity> entities = initMA(days, volBarChartData);
         data.setData(entities);
 

@@ -62,4 +62,5 @@ public abstract class BaseChartDataConfig {
     public void setYValueFormatter(ValueFormatter mYValueFormatter) {
         this.mYValueFormatter = mYValueFormatter;
     }
+
 }

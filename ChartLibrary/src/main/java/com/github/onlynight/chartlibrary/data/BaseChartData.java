@@ -21,6 +21,11 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
     protected int mMaxIndex;
     protected int mMinIndex;
 
+    /**
+     * chart name
+     */
+    protected String mChartName = "Chart";
+
     public BaseChartData() {
     }
 
@@ -55,6 +60,14 @@ public abstract class BaseChartData<Entity extends BaseEntity, Config extends Ba
     public void setShowData(List<Entity> showData) {
         this.mShowData = showData;
         reformatData();
+    }
+
+    public String getChartName() {
+        return mChartName;
+    }
+
+    public void setChartName(String chartName) {
+        this.mChartName = chartName;
     }
 
     public void reformatData() {

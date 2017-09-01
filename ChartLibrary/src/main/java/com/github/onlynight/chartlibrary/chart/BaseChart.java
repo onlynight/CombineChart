@@ -27,6 +27,11 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
     public static final int BLANK = 5;
 
     /**
+     * is show legend
+     */
+    private boolean mIsShowLegend = true;
+
+    /**
      * chart area
      */
     protected int mLeft;
@@ -98,6 +103,10 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         this.mDataList = new ArrayList<>();
         this.mRender = createChartRender();
         this.mRender.setIsClipContainer(isClipContainer);
+    }
+
+    public void setOnCrossPointClickListener(OnCrossPointClickListener onCrossPointClickListener) {
+        mRender.setOnCrossPointClickListener(onCrossPointClickListener);
     }
 
     public void setIsClipContainer(boolean isClipContainer) {
@@ -368,6 +377,14 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         this.mMaxYAxisScaleText = maxYAxisScaleText;
     }
 
+    public boolean isShowLegend() {
+        return mIsShowLegend;
+    }
+
+    public void setIsShowLegend(boolean isShowLegend) {
+        this.mIsShowLegend = isShowLegend;
+    }
+
     @Override
     public void setCrossPoint(PointF crossPoint) {
         mRender.setCrossPoint(crossPoint);
@@ -386,5 +403,11 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
     @Override
     public void setCrossBorderColor(int color) {
         mRender.setCrossBorderColor(color);
+    }
+
+    public interface OnCrossPointClickListener {
+
+        void onCrossPointClick(List<BaseEntity> entities);
+
     }
 }
