@@ -148,7 +148,7 @@ public class CandleStickPartRender extends BasePartRender {
             }
             canvas.drawText(low, (float) tempX,
                     mChart.getyAxis().getScales().
-                            get(mChart.getxAxis().getScales().size()).getStartPos().y +
+                            get(mChart.getxAxis().getScales().size() - 1).getStartPos().y +
                             BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
 
             String high;
