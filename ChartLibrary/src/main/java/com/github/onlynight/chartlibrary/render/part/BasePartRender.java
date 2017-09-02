@@ -52,16 +52,17 @@ public abstract class BasePartRender implements IChartInterface {
                     BaseChartDataConfig config = data.getConfig();
                     float chartWidth = mChart.getxAxis().getEndPos().x -
                             mChart.getxAxis().getStartPos().x;
-                    if (config.isAutoWidth() &&
-                            data.getData() != null &&
-                            data.getData().size() > 0) {
-                        config.setBarWidth(chartWidth / data.getData().size());
+                    if (config.isAutoWidth()) {
+                        if (data.getData() != null &&
+                                data.getData().size() > 0) {
+                            config.setBarWidth(chartWidth / data.getData().size());
+                        }
                     } else {
-                        isCanZoomLessThanNormal = false;
                         float tempWidth = data.getData().size() * config.getBarWidth();
                         if (tempWidth < mChart.getxAxis().getEndPos().x -
                                 mChart.getxAxis().getStartPos().x &&
                                 data.getData().size() > 0) {
+                            isCanZoomLessThanNormal = false;
                             config.setBarWidth(chartWidth / data.getData().size());
                         }
                     }
