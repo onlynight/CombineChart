@@ -145,9 +145,17 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
                     }
 
                     if (mOnCrossPointClickListener != null) {
-                        mOnCrossPointClickListener.onCrossPointClick(entities);
+                        mOnCrossPointClickListener.onCrossPointClick(entities, mChart.getDataList());
                     }
                 }
+            } else {
+                if (mOnCrossPointClickListener != null) {
+                    mOnCrossPointClickListener.onCrossPointClick(null, null);
+                }
+            }
+        } else {
+            if (mOnCrossPointClickListener != null) {
+                mOnCrossPointClickListener.onCrossPointClick(null, null);
             }
         }
     }

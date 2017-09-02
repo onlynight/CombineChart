@@ -407,7 +407,7 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
 
     public interface OnCrossPointClickListener {
 
-        void onCrossPointClick(List<BaseEntity> entities);
+        void onCrossPointClick(List<BaseEntity> entities, List<BaseChartData> chartsData);
 
     }
 }

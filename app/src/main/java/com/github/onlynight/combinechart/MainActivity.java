@@ -5,15 +5,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.github.onlynight.chartlibrary.chart.BaseChart;
 import com.github.onlynight.chartlibrary.chart.CombineChart;
+import com.github.onlynight.chartlibrary.data.BaseChartData;
+import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
+import com.github.onlynight.chartlibrary.util.Utils;
 import com.github.onlynight.chartlibrary.view.CombineChartView;
 import com.github.onlynight.combinechart.chart.KLineChartFactory;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
 
+public class MainActivity extends AppCompatActivity implements BaseChart.OnCrossPointClickListener {
+
+    private TextView mTextCrossPoint1;
+    private TextView mTextCrossPoint2;
     private CombineChartView mCombineChartView;
     private KLineChartFactory mKLineChartFactory;
 
@@ -26,10 +36,14 @@ public class MainActivity extends AppCompatActivity {
 
         mKLineChartFactory = new KLineChartFactory(this);
 
+        mTextCrossPoint1 = (TextView) findViewById(R.id.textCrossPoint1);
+        mTextCrossPoint2 = (TextView) findViewById(R.id.textCrossPoint2);
         mCombineChartView = (CombineChartView) findViewById(R.id.chart);
         mCombineChartView.setOperatable(true);
         mCombineChartView.setIsShowCrossPoint(true);
-        mCombineChartView.addChart(generateCombineChart1());
+        CombineChart candleChart = generateCombineChart1();
+        candleChart.setOnCrossPointClickListener(this);
+        mCombineChartView.addChart(candleChart);
         mCombineChartView.addChart(generateCombineChart2());
         mCombineChartView.addChart(generateCombineChart3());
         mHandler.postDelayed(new Runnable() {
@@ -71,4 +85,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onCrossPointClick(List<BaseEntity> entities, List<BaseChartData> chartsData) {
+        if (entities == null || chartsData == null) {
+            mTextCrossPoint1.setText("");
+            mTextCrossPoint2.setText("");
+        } else {
+            SpannableStringBuilder sb = Utils.getChartCrossPointSpannable(
+                    this, entities, chartsData, 8f);
+            mTextCrossPoint1.setText(Utils.getChartCrossPointCandleStick(entities, chartsData));
+            mTextCrossPoint2.setText(sb);
+        }
+    }
 }

@@ -46,6 +46,7 @@ public class KLineRepository {
     private CandleStickChartData generateCandleStickData(List<CandleStickEntity> candleStickEntities) {
         CandleStickChartDataConfig config = new CandleStickChartDataConfig();
         config.setAutoWidth(true);
+        config.setColor(Color.RED);
         config.setIncreasingColor(Color.RED);
         config.setDecreasingColor(Color.GREEN);
         config.setStrokeWidth(2f);
