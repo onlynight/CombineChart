@@ -73,6 +73,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     public void onMeasure() {
         measureBorder();
         measureAxisPart();
+        mPartRender.onMeasure();
     }
 
     private void measureAxisPart() {
