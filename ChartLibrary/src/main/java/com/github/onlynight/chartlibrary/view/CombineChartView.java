@@ -117,14 +117,20 @@ public class CombineChartView extends View implements IChartInterface {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        for (BaseChart chart : mCharts) {
-            chart.onMeasure();
-        }
+//        for (BaseChart chart : mCharts) {
+//            chart.onMeasure();
+//        }
+//        int width = MeasureSpec.getSize(widthMeasureSpec);
+//        int height = MeasureSpec.getSize(heightMeasureSpec);
+//        onLayoutChart(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        for (BaseChart chart : mCharts) {
+            chart.onMeasure();
+        }
 
         for (BaseChart chart : mCharts) {
             chart.onDraw(canvas);
@@ -336,5 +342,10 @@ public class CombineChartView extends View implements IChartInterface {
                 chart.setCrossBorderColor(color);
             }
         }
+    }
+
+    public void firstInvalidate() {
+        requestLayout();
+        invalidate();
     }
 }
