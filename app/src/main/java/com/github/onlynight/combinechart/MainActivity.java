@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements BaseChart.OnCross
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mCombineChartView.setxDelta(0);
+                mCombineChartView.setxDelta(mCombineChartView.getxDelta());
                 mCombineChartView.invalidate();
             }
         }, 200);
