@@ -1,19 +1,14 @@
-package com.github.onlynight.chartlibrary.chart;
+package com.github.onlynight.chartlibrary.chart.impl;
 
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
 import com.github.onlynight.chartlibrary.data.entity.CandleStickEntity;
-import com.github.onlynight.chartlibrary.render.CandleStickChartRender;
+import com.github.onlynight.chartlibrary.render.impl.CandleStickChartRender;
 
 /**
  * Created by lion on 2017/8/21.
  */
 
 public class CandleStickChart extends BaseChart<CandleStickChartData, CandleStickChartRender> {
-
-    @Override
-    protected CandleStickChartRender createChartRender() {
-        return new CandleStickChartRender(this);
-    }
 
     @Override
     public void setExtremeValue(CandleStickChartData data) {
@@ -40,16 +35,6 @@ public class CandleStickChart extends BaseChart<CandleStickChartData, CandleStic
             data.setMinIndex(minIndex);
             data.setMaxIndex(maxIndex);
         }
-    }
-
-    @Override
-    public boolean isCanZoomLessThanNormal() {
-        return mRender.isCanZoomLessThanNormal();
-    }
-
-    @Override
-    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
-        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
     }
 
     private double getMaxDelta(double max) {

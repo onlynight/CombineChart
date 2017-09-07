@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.onlynight.chartlibrary.chart.CombineChart;
+import com.github.onlynight.chartlibrary.chart.impl.CombineChart;
 import com.github.onlynight.chartlibrary.view.SingleCombineChartView;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class SingleChartsRecyclerAdapter extends RecyclerView.Adapter<SingleChar
     public void onBindViewHolder(ViewHolder holder, int position) {
         CombineChart chart = mCharts.get(position);
         holder.singleChartView.setChart(chart);
-        holder.singleChartView.setOperatable(false);
+        holder.singleChartView.setCanOperate(false);
     }
 
     @Override

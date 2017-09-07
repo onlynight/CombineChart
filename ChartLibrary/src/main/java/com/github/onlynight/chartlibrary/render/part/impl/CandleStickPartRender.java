@@ -1,9 +1,9 @@
-package com.github.onlynight.chartlibrary.render.part;
+package com.github.onlynight.chartlibrary.render.part.impl;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Scale;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
@@ -120,7 +120,9 @@ public class CandleStickPartRender extends BasePartRender {
 
     private void drawMinAndMax(CandleStickChartData data, Canvas canvas) {
         if (data.getShowData() != null &&
-                data.getShowData().size() > data.getMaxIndex()) {
+                data.getShowData().size() > data.getMaxIndex() &&
+                mChart.getyAxis().getScales() != null &&
+                mChart.getyAxis().getScales().size() > 0) {
 
             mTextPaint.setTextSize(mChart.getMarginTextSize());
             mTextPaint.setColor(mChart.getMarginTextColor());
@@ -144,9 +146,16 @@ public class CandleStickPartRender extends BasePartRender {
             } else {
                 tempX = minEntity.getX();
             }
+
+            int size = mChart.getyAxis().getScales().size() - 1;
+
+            if (size < 0) {
+                size = 0;
+            }
+
             canvas.drawText(low, (float) tempX,
                     mChart.getyAxis().getScales().
-                            get(mChart.getyAxis().getScales().size() - 1).getStartPos().y +
+                            get(size).getStartPos().y +
                             BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
 
             String high;

@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render;
+package com.github.onlynight.chartlibrary.render.impl;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,16 +10,19 @@ import android.graphics.PointF;
 import android.graphics.Region;
 import android.text.TextUtils;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.OnCrossPointClickListener;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Scale;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
 import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
-import com.github.onlynight.chartlibrary.operate.IChartInterface;
-import com.github.onlynight.chartlibrary.render.part.BasePartRender;
+import com.github.onlynight.chartlibrary.render.IChartRender;
+import com.github.onlynight.chartlibrary.render.part.IPartRender;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +31,8 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public abstract class BaseChartRender<T extends BaseChartData, PartRender extends BasePartRender> implements
-        IChartInterface {
+public class BaseChartRender<Data extends BaseChartData, PartRender extends IPartRender>
+        implements IChartRender {
 
     protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     protected Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -40,11 +43,9 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     private boolean mIsClipContainer = false;
     private boolean mIsAutoZoomYAxis = false;
 
-    private OnResetExtremeValueListener onResetExtremeValueListener;
-
     private PartRender mPartRender;
     private double mYValueRange = 0;
-    private BaseChart.OnCrossPointClickListener mOnCrossPointClickListener;
+    private OnCrossPointClickListener mOnCrossPointClickListener;
 
     public BaseChartRender(BaseChart chart) {
         this.mChart = chart;
@@ -52,14 +53,22 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         mPartRender = createPartRender(chart);
     }
 
-    public abstract PartRender createPartRender(BaseChart chart);
+    private PartRender createPartRender(BaseChart chart) {
+        try {
+            Class<? extends BaseChartRender> thisClass = getClass();
+            Type type = thisClass.getGenericSuperclass();
+            Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+            Class<?> clazz = (Class<?>) types[1];
+            return (PartRender) clazz.getConstructor(BaseChart.class).newInstance(chart);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    public void setOnCrossPointClickListener(BaseChart.OnCrossPointClickListener onCrossPointClickListener) {
-        this.mOnCrossPointClickListener = onCrossPointClickListener;
+        return null;
     }
 
-    public void setOnResetExtremeValueListener(OnResetExtremeValueListener onResetExtremeValueListener) {
-        this.onResetExtremeValueListener = onResetExtremeValueListener;
+    public void setOnCrossPointClickListener(OnCrossPointClickListener onCrossPointClickListener) {
+        this.mOnCrossPointClickListener = onCrossPointClickListener;
     }
 
     public boolean isClipContainer() {
@@ -92,13 +101,13 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         int border = 5;
         PointF point = mPartRender.getCrossPoint();
         if (point != null && point.x > 0 && point.y > 0) {
-            if (mPartRender.isInChartRange(point)) {
+            if (isInChartRange(point)) {
                 mGraphPaint.setColor(mPartRender.getCrossBorderColor());
                 mGraphPaint.setStyle(Paint.Style.FILL);
 
                 float textSize = mChart.getyAxis().getTextSize();
 
-                if (mPartRender.isInChartYRange(point)) {
+                if (isInChartYRange(point)) {
                     mTextPaint.setTextSize(textSize);
                     mTextPaint.setColor(Color.WHITE);
                     float fontHeight = getFontHeight(mTextPaint);
@@ -184,8 +193,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
 
         for (int i = 0; i < chartSize; i++) {
             BaseChartData chartData = (BaseChartData) mChart.getDataList().get(i);
-            if (chartData instanceof CandleStickChartData) {
-            } else {
+            if (!(chartData instanceof CandleStickChartData)) {
                 BaseChartDataConfig config = chartData.getConfig();
                 int color = config.getColor();
                 mTextPaint.setColor(color);
@@ -217,7 +225,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         mPartRender.onDrawChart(canvas);
     }
 
-    protected void measureBorder() {
+    private void measureBorder() {
         float halfBorder = mChart.getBorder().getWidth() / 2;
         PointF topLeft = new PointF(mChart.getLeft() + halfBorder,
                 mChart.getTop() + halfBorder);
@@ -226,12 +234,12 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         mChart.getBorder().setBottomRight(bottomRight);
     }
 
-    protected void measureAxis() {
+    private void measureAxis() {
         measureYAxis();
         measureXAxis();
     }
 
-    protected void measureYAxis() {
+    private void measureYAxis() {
         mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
         mGraphPaint.setStrokeWidth(mChart.getyAxis().getWidth());
 
@@ -303,7 +311,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         mChart.getxAxis().getEndPos().y = y;
     }
 
-    private String getYAxisTextMaxLength(List<T> dataList) {
+    private String getYAxisTextMaxLength(List<Data> dataList) {
         String maxText = "0.00";
         if (mChart != null) {
             maxText = mChart.generateMaxLengthYAxisScaleText();
@@ -314,7 +322,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
             }
 
             String max = "0.00";
-            for (T data : dataList) {
+            for (Data data : dataList) {
                 String temp = getYAxisTextMaxLength(data);
                 if (temp.length() > max.length()) {
                     max = temp;
@@ -327,14 +335,14 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         }
     }
 
-    private String getYAxisTextMaxLength(T chartData) {
-        if (chartData == null ||
-                chartData.getData() == null) {
+    private String getYAxisTextMaxLength(Data data) {
+
+        if (data == null || data.getData() == null) {
             return "";
         }
 
         String max = "";
-        for (Object temp : chartData.getData()) {
+        for (Object temp : data.getData()) {
             if (temp instanceof BaseEntity) {
                 BaseEntity entity = (BaseEntity) temp;
                 if (!TextUtils.isEmpty(entity.getyValue()) &&
@@ -595,7 +603,8 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         }
     }
 
-    protected double getYMaxValue() {
+    @Override
+    public double getYMaxValue() {
         double max = Double.MIN_VALUE;
         for (Object obj : mChart.getDataList()) {
             if (obj instanceof BaseChartData) {
@@ -609,7 +618,8 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         return max;
     }
 
-    protected double getYMinValue() {
+    @Override
+    public double getYMinValue() {
         double min = Double.MAX_VALUE;
         for (Object obj : mChart.getDataList()) {
             if (obj instanceof BaseChartData) {
@@ -765,7 +775,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         }
     }
 
-    protected void clipContainer(Canvas canvas) {
+    private void clipContainer(Canvas canvas) {
         List<Scale> scales = mChart.getyAxis().getScales();
         if (scales != null && scales.size() > 0) {
             mContainerPath.reset();
@@ -787,9 +797,6 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     public void setScale(float scale) {
         if (mIsAutoZoomYAxis) {
             cutBarEntities();
-            if (onResetExtremeValueListener != null) {
-                onResetExtremeValueListener.onResetExtremeValue();
-            }
             measureAxisPart();
         }
 
@@ -802,21 +809,18 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     }
 
     @Override
-    public void setxDelta(float xDelta) {
+    public void setXDelta(float xDelta) {
         if (mIsAutoZoomYAxis) {
             cutBarEntities();
-            if (onResetExtremeValueListener != null) {
-                onResetExtremeValueListener.onResetExtremeValue();
-            }
             measureAxisPart();
         }
 
-        mPartRender.setxDelta(xDelta);
+        mPartRender.setXDelta(xDelta);
     }
 
     @Override
-    public float getxDelta() {
-        return mPartRender.getxDelta();
+    public float getXDelta() {
+        return mPartRender.getXDelta();
     }
 
     @Override
@@ -834,6 +838,11 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         mPartRender.setCrossPoint(crossPoint);
     }
 
+    @Override
+    public PointF getCrossPoint() {
+        return mPartRender.getCrossPoint();
+    }
+
     public boolean isAutoZoomYAxis() {
         return mIsAutoZoomYAxis;
     }
@@ -845,6 +854,11 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
     @Override
     public void setCrossColor(int crossColor) {
         mPartRender.setCrossColor(crossColor);
+    }
+
+    @Override
+    public int getCrossBorderColor() {
+        return mPartRender.getCrossBorderColor();
     }
 
     @Override
@@ -914,7 +928,7 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         return -1;
     }
 
-    public List<BaseEntity> getSelectEntities() {
+    private List<BaseEntity> getSelectEntities() {
         if (mChart.getDataList() == null) {
             return null;
         }
@@ -942,10 +956,24 @@ public abstract class BaseChartRender<T extends BaseChartData, PartRender extend
         return entities;
     }
 
-    public interface OnResetExtremeValueListener {
+    private boolean isInChartYRange(PointF point) {
+        float top = mChart.getyAxis().getScales().get(0).getStartPos().y;
+        float bottom = mChart.getyAxis().getScales().get(mChart.getyAxis().getScales().size() - 1).getStartPos().y;
 
-        void onResetExtremeValue();
+        return point.y > top &&
+                point.y < bottom;
+    }
 
+    private boolean isInChartXRange(PointF point) {
+        float left = mChart.getxAxis().getStartPos().x;
+        float right = mChart.getyAxis().getEndPos().x;
+
+        return point.x > left &&
+                point.x < right;
+    }
+
+    private boolean isInChartRange(PointF point) {
+        return isInChartXRange(point);
     }
 
 }

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.github.onlynight.chartlibrary.chart.CombineChart;
+import com.github.onlynight.chartlibrary.chart.impl.CombineChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;

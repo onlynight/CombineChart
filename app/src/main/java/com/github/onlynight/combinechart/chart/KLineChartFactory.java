@@ -3,7 +3,7 @@ package com.github.onlynight.combinechart.chart;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.github.onlynight.chartlibrary.chart.CombineChart;
+import com.github.onlynight.chartlibrary.chart.impl.CombineChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
@@ -28,6 +28,12 @@ public class KLineChartFactory {
         this.mContext = mContext;
         this.mDataRepository = new DataRepository();
         this.mKLineRepository = new KLineRepository(mDataRepository.createLocalCandleStickData(0));
+    }
+
+    public KLineChartFactory(Context mContext, String json) {
+        this.mContext = mContext;
+        this.mDataRepository = new DataRepository();
+        this.mKLineRepository = new KLineRepository(mDataRepository.createLocalCandleStickData(json));
     }
 
     public CombineChart generateKLineChart() {

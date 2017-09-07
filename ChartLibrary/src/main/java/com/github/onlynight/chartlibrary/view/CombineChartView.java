@@ -11,10 +11,10 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.IChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
-import com.github.onlynight.chartlibrary.operate.IChartInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public class CombineChartView extends View implements IChartInterface {
+public class CombineChartView extends View implements IChartView, IChart {
 
     private List<BaseChart> mCharts;
     private float mScale = 1f;
@@ -32,14 +32,13 @@ public class CombineChartView extends View implements IChartInterface {
     private GestureDetectorCompat mDetector;
     private ScaleGestureDetector mScaleDetector;
 
-    private MyGestureListener gestureListener;
+    private MyGestureListener mGestureListener;
     private List<Double> mChartsHeight = new ArrayList<>();
 
-    private boolean mIsOperatable = true;
+    private boolean mCanOperate = true;
     private boolean mIsShowCrossPoint = true;
 
     private float mLastScale = 1f;
-
     private PointF mTouchPoint;
 
     public CombineChartView(Context context) {
@@ -59,9 +58,9 @@ public class CombineChartView extends View implements IChartInterface {
 
     private void initView() {
         mCharts = new ArrayList<>();
-        gestureListener = new MyGestureListener();
-        mDetector = new GestureDetectorCompat(getContext(), gestureListener);
-        mScaleDetector = new ScaleGestureDetector(getContext(), gestureListener);
+        mGestureListener = new MyGestureListener();
+        mDetector = new GestureDetectorCompat(getContext(), mGestureListener);
+        mScaleDetector = new ScaleGestureDetector(getContext(), mGestureListener);
 
         mTouchPoint = new PointF(-1, -1);
     }
@@ -69,8 +68,8 @@ public class CombineChartView extends View implements IChartInterface {
     public void addChart(BaseChart chart) {
         if (chart != null) {
             chart.setIsClipContainer(true);
+            mCharts.add(chart);
         }
-        mCharts.add(chart);
     }
 
     @Override
@@ -115,19 +114,9 @@ public class CombineChartView extends View implements IChartInterface {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        for (BaseChart chart : mCharts) {
-//            chart.onMeasure();
-//        }
-//        int width = MeasureSpec.getSize(widthMeasureSpec);
-//        int height = MeasureSpec.getSize(heightMeasureSpec);
-//        onLayoutChart(width, height);
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         for (BaseChart chart : mCharts) {
             chart.onMeasure();
         }
@@ -174,12 +163,12 @@ public class CombineChartView extends View implements IChartInterface {
     }
 
     @Override
-    public float getxDelta() {
+    public float getXDelta() {
         return xDelta;
     }
 
     @Override
-    public void setxDelta(float xDelta) {
+    public void setXDelta(float xDelta) {
         if (xDelta <= 0) {
             xDelta = 0;
         }
@@ -192,7 +181,7 @@ public class CombineChartView extends View implements IChartInterface {
 
         this.xDelta = xDelta;
         for (BaseChart chart : mCharts) {
-            chart.setxDelta(this.xDelta);
+            chart.setXDelta(this.xDelta);
         }
     }
 
@@ -216,6 +205,16 @@ public class CombineChartView extends View implements IChartInterface {
         }
     }
 
+    @Override
+    public PointF getCrossPoint() {
+        try {
+            return mCharts.get(0).getCrossPoint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private int calculateMax() {
         try {
             BaseChart chart = mCharts.get(0);
@@ -232,9 +231,9 @@ public class CombineChartView extends View implements IChartInterface {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mIsOperatable) {
+        if (mCanOperate) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                setxDelta(getxDelta());
+                setXDelta(getXDelta());
                 invalidate();
             } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 mTouchPoint.set(event.getX(), event.getY());
@@ -269,14 +268,14 @@ public class CombineChartView extends View implements IChartInterface {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             mTouchPoint.set(-1, -1);
             setCrossPoint(mTouchPoint);
-            setxDelta(getxDelta() - distanceX);
+            setXDelta(getXDelta() - distanceX);
             invalidate();
             return true;
         }
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//            setxDelta(getxDelta() + velocityX / 10);
+//            setXDelta(getXDelta() + velocityX / 10);
 //            invalidate();
             return true;
         }
@@ -287,7 +286,7 @@ public class CombineChartView extends View implements IChartInterface {
             float currentScale = detector.getScaleFactor();
             float scale = mLastScale * currentScale;
             setScale(scale);
-            setxDelta(getxDelta());
+            setXDelta(getXDelta());
             invalidate();
             return false;
         }
@@ -303,14 +302,16 @@ public class CombineChartView extends View implements IChartInterface {
         }
     }
 
-    public boolean isOperatable() {
-        return mIsOperatable;
+    @Override
+    public boolean canOperate() {
+        return mCanOperate;
     }
 
-    public void setOperatable(boolean operatable) {
-        mIsOperatable = operatable;
+    public void setCanOperate(boolean canOperate) {
+        mCanOperate = canOperate;
     }
 
+    @Override
     public void setCrossColor(int crossColor) {
         if (mCharts != null) {
             for (BaseChart chart : mCharts) {
@@ -319,14 +320,22 @@ public class CombineChartView extends View implements IChartInterface {
         }
     }
 
+    @Override
+    public int getCrossBorderColor() {
+        return 0;
+    }
+
+    @Override
     public boolean isShowCrossPoint() {
         return mIsShowCrossPoint;
     }
 
+    @Override
     public void setIsShowCrossPoint(boolean isShowCrossPoint) {
         this.mIsShowCrossPoint = isShowCrossPoint;
     }
 
+    @Override
     public void setCrossLineWidth(float crossLineWidth) {
         if (mCharts != null) {
             for (BaseChart chart : mCharts) {

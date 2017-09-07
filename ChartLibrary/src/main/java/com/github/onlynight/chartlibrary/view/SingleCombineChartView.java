@@ -11,14 +11,14 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
-import com.github.onlynight.chartlibrary.operate.IChartInterface;
+import com.github.onlynight.chartlibrary.chart.IChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 
 /**
  * Created by lion on 2017/8/10.
  */
 
-public class SingleCombineChartView extends View implements IChartInterface {
+public class SingleCombineChartView extends View implements IChartView, IChart {
 
     private BaseChart mChart;
     private float mScale = 1f;
@@ -29,7 +29,7 @@ public class SingleCombineChartView extends View implements IChartInterface {
 
     private MyGestureListener gestureListener;
 
-    private boolean mIsOperatable = true;
+    private boolean mCanOperate = true;
 
     public SingleCombineChartView(Context context) {
         super(context);
@@ -81,14 +81,14 @@ public class SingleCombineChartView extends View implements IChartInterface {
     }
 
     @Override
-    public float getxDelta() {
+    public float getXDelta() {
         return xDelta;
     }
 
     @Override
-    public void setxDelta(float xDelta) {
+    public void setXDelta(float xDelta) {
         this.xDelta = xDelta;
-        mChart.setxDelta(xDelta);
+        mChart.setXDelta(xDelta);
     }
 
     @Deprecated
@@ -110,10 +110,20 @@ public class SingleCombineChartView extends View implements IChartInterface {
         // do nothing
     }
 
+    @Override
+    public PointF getCrossPoint() {
+        return null;
+    }
+
     @Deprecated
     @Override
     public void setCrossColor(int crossColor) {
         // do nothing
+    }
+
+    @Override
+    public int getCrossBorderColor() {
+        return 0;
     }
 
     @Deprecated
@@ -130,7 +140,7 @@ public class SingleCombineChartView extends View implements IChartInterface {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mIsOperatable) {
+        if (mCanOperate) {
             int count = event.getPointerCount();
             if (count <= 1) {
                 return mDetector.onTouchEvent(event);
@@ -153,7 +163,7 @@ public class SingleCombineChartView extends View implements IChartInterface {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            setxDelta(getxDelta() - distanceX);
+            setXDelta(getXDelta() - distanceX);
             invalidate();
             return true;
         }
@@ -185,11 +195,22 @@ public class SingleCombineChartView extends View implements IChartInterface {
 
     private float mLastScale = 1f;
 
-    public boolean isOperatable() {
-        return mIsOperatable;
+    @Override
+    public boolean canOperate() {
+        return mCanOperate;
     }
 
-    public void setOperatable(boolean operatable) {
-        mIsOperatable = operatable;
+    public void setCanOperate(boolean canOperate) {
+        mCanOperate = canOperate;
     }
+
+    @Override
+    public boolean isShowCrossPoint() {
+        return false;
+    }
+
+    @Override
+    public void setIsShowCrossPoint(boolean isShowCrossPoint) {
+    }
+
 }

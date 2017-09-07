@@ -10,17 +10,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
-import com.github.onlynight.chartlibrary.chart.CombineChart;
+import com.github.onlynight.chartlibrary.chart.OnCrossPointClickListener;
+import com.github.onlynight.chartlibrary.chart.impl.CombineChart;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
-import com.github.onlynight.chartlibrary.util.Utils;
 import com.github.onlynight.chartlibrary.view.CombineChartView;
 import com.github.onlynight.combinechart.chart.KLineChartFactory;
+import com.github.onlynight.combinechart.util.Utils;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BaseChart.OnCrossPointClickListener {
+import static com.github.onlynight.chartlibrary.util.Utils.getChartCrossPointCandleStick;
+import static com.github.onlynight.chartlibrary.util.Utils.getChartCrossPointSpannable;
+
+public class MainActivity extends AppCompatActivity implements OnCrossPointClickListener {
 
     private TextView mTextCrossPoint1;
     private TextView mTextCrossPoint2;
@@ -34,25 +37,25 @@ public class MainActivity extends AppCompatActivity implements BaseChart.OnCross
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mKLineChartFactory = new KLineChartFactory(this);
+        mKLineChartFactory = new KLineChartFactory(this, Utils.readJsonFile(this, "kline.js"));
 
         mTextCrossPoint1 = (TextView) findViewById(R.id.textCrossPoint1);
         mTextCrossPoint2 = (TextView) findViewById(R.id.textCrossPoint2);
         mCombineChartView = (CombineChartView) findViewById(R.id.chart);
-        mCombineChartView.setOperatable(true);
+        mCombineChartView.setCanOperate(true);
         mCombineChartView.setIsShowCrossPoint(true);
         CombineChart candleChart = generateCombineChart1();
         candleChart.setOnCrossPointClickListener(this);
         mCombineChartView.addChart(candleChart);
-        mCombineChartView.addChart(generateCombineChart2());
-        mCombineChartView.addChart(generateCombineChart3());
+//        mCombineChartView.addChart(generateCombineChart2());
+//        mCombineChartView.addChart(generateCombineChart3());
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mCombineChartView.setxDelta(mCombineChartView.getxDelta());
+                mCombineChartView.setXDelta(mCombineChartView.getXDelta());
                 mCombineChartView.invalidate();
             }
-        }, 200);
+        }, 500);
     }
 
     private CombineChart generateCombineChart1() {
@@ -91,9 +94,9 @@ public class MainActivity extends AppCompatActivity implements BaseChart.OnCross
             mTextCrossPoint1.setText("");
             mTextCrossPoint2.setText("");
         } else {
-            SpannableStringBuilder sb = Utils.getChartCrossPointSpannable(
+            SpannableStringBuilder sb = getChartCrossPointSpannable(
                     this, entities, chartsData, 8f);
-            mTextCrossPoint1.setText(Utils.getChartCrossPointCandleStick(entities, chartsData));
+            mTextCrossPoint1.setText(getChartCrossPointCandleStick(entities, chartsData));
             mTextCrossPoint2.setText(sb);
         }
     }

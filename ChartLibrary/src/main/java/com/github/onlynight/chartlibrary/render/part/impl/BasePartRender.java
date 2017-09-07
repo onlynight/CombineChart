@@ -1,50 +1,49 @@
-package com.github.onlynight.chartlibrary.render.part;
+package com.github.onlynight.chartlibrary.render.part.impl;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
-import com.github.onlynight.chartlibrary.operate.IChartInterface;
+import com.github.onlynight.chartlibrary.render.part.IPartRender;
 
 /**
  * Created by lion on 2017/8/22.
  */
 
-public abstract class BasePartRender implements IChartInterface {
+public abstract class BasePartRender implements IPartRender {
 
-    public static final int DEFAULT_BAR_WIDTH = 2;
+    static final int DEFAULT_BAR_WIDTH = 2;
 
-    protected BaseChart mChart;
+    BaseChart mChart;
 
-    protected Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    protected Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mGraphPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    protected float mScale = 1f;
-    protected float mXDelta = 0;
+    float mScale = 1f;
+    float mXDelta = 0;
 
-    protected PointF mCrossPoint;
+    private PointF mCrossPoint;
     private int mCrossColor = Color.GRAY;
     private float mCrossLineWidth = 2f;
     private int mCrossBorderColor = Color.GRAY;
 
     protected boolean isCanZoomLessThanNormal = true;
 
-    public BasePartRender(BaseChart chart) {
+    BasePartRender(BaseChart chart) {
         this.mChart = chart;
         this.mCrossPoint = new PointF(-1, -1);
     }
 
+    @Override
     public void onMeasure() {
         measureCandleChartItemWidth();
     }
 
-    public abstract void onDrawChart(Canvas canvas);
-
-    protected void measureCandleChartItemWidth() {
+    private void measureCandleChartItemWidth() {
         if (mChart != null && mChart.getDataList() != null) {
             for (Object temp : mChart.getDataList()) {
                 if (temp instanceof BaseChartData) {
@@ -72,12 +71,12 @@ public abstract class BasePartRender implements IChartInterface {
     }
 
     @Override
-    public void setxDelta(float xDelta) {
+    public void setXDelta(float xDelta) {
         this.mXDelta = xDelta;
     }
 
     @Override
-    public float getxDelta() {
+    public float getXDelta() {
         return mXDelta;
     }
 
@@ -91,7 +90,7 @@ public abstract class BasePartRender implements IChartInterface {
         return mScale;
     }
 
-    protected double getYMaxValue() {
+    double getYMaxValue() {
         double max = Double.MIN_VALUE;
         for (Object obj : mChart.getDataList()) {
             if (obj instanceof BaseChartData) {
@@ -105,7 +104,7 @@ public abstract class BasePartRender implements IChartInterface {
         return max;
     }
 
-    protected double getYMinValue() {
+    double getYMinValue() {
         double min = Double.MAX_VALUE;
         for (Object obj : mChart.getDataList()) {
             if (obj instanceof BaseChartData) {
@@ -160,12 +159,12 @@ public abstract class BasePartRender implements IChartInterface {
     /**
      * @return get font height
      */
-    protected float getFontHeight(Paint paint) {
+    float getFontHeight(Paint paint) {
         Paint.FontMetrics fm = paint.getFontMetrics();
         return (fm.descent - fm.ascent) / 3 * 2;
     }
 
-    protected void drawCross(Canvas canvas) {
+    void drawCross(Canvas canvas) {
         if (isInChartRange(mCrossPoint)) {
             mGraphPaint.setColor(mCrossColor);
             mGraphPaint.setStrokeWidth(mCrossLineWidth);
@@ -177,7 +176,7 @@ public abstract class BasePartRender implements IChartInterface {
 
     }
 
-    public boolean isInChartYRange(PointF point) {
+    private boolean isInChartYRange(PointF point) {
         float top = mChart.getyAxis().getScales().get(0).getStartPos().y;
         float bottom = mChart.getyAxis().getScales().get(mChart.getyAxis().getScales().size() - 1).getStartPos().y;
 
@@ -185,7 +184,7 @@ public abstract class BasePartRender implements IChartInterface {
                 point.y < bottom;
     }
 
-    public boolean isInChartXRange(PointF point) {
+    private boolean isInChartXRange(PointF point) {
         float left = mChart.getxAxis().getStartPos().x;
         float right = mChart.getyAxis().getEndPos().x;
 
@@ -193,7 +192,7 @@ public abstract class BasePartRender implements IChartInterface {
                 point.x < right;
     }
 
-    public boolean isInChartRange(PointF point) {
+    private boolean isInChartRange(PointF point) {
         return isInChartXRange(point);
     }
 

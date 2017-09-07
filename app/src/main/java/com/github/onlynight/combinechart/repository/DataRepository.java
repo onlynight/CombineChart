@@ -191,4 +191,67 @@ public class DataRepository {
 
     }
 
+    public List<CandleStickEntity> createLocalCandleStickData(String json) {
+        if (TextUtils.isEmpty(json)) {
+            return null;
+        }
+
+        try {
+            JSONObject resp = new JSONObject(json);
+            String resultCode = resp.getString("code");
+
+            List<CandleStickEntity> entities = new ArrayList<>();
+
+            if (!TextUtils.isEmpty(resultCode) && resultCode.equals("00000")) {
+                String jsonstr = resp.getString("data");
+                String rows = new JSONObject(jsonstr).getString("rows");
+                JSONArray resultMsg = new JSONArray(rows);
+
+                if (resultMsg.length() != 0) {
+
+                    double open, low, close, high, volume;
+                    long time;
+                    int blank = 1;
+                    for (int i = 0; i < resultMsg.length(); i++) {
+                        JSONArray jsondata = resultMsg.getJSONArray(i);
+
+                        time = jsondata.getLong(0) != 0 ? jsondata.getLong(0) : 0;
+                        open = jsondata.getDouble(1);
+                        high = jsondata.getDouble(2);
+                        low = jsondata.getDouble(3);
+                        close = jsondata.getDouble(4);
+                        volume = jsondata.getDouble(5);
+
+                        if (i % blank == 0) {
+                            CandleStickEntity entity = new CandleStickEntity();
+                            entity.setTime(time);
+                            entity.setOpen(open);
+                            entity.setHigh(high);
+                            entity.setLow(low);
+                            entity.setClose(close);
+                            entity.setVol(volume);
+                            entities.add(entity);
+                        }
+                    }
+
+//                    if (size <= 0) {
+//                        return entities;
+//                    } else {
+//                        if (entities.size() > size) {
+//                            entities = entities.subList(entities.size() - size, entities.size());
+//                        }
+//                    }
+
+                }
+            }
+
+            return entities;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
 }

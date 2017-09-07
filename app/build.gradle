@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'packer'
 
 android {
     compileSdkVersion 25
@@ -11,10 +12,30 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        debug {
+            keyAlias 'combine_chart'
+            keyPassword 'qwe123'
+            storeFile file(buildFile.parent + '/../keys/debug.jks')
+            storePassword 'qwe123'
+            v2SigningEnabled false
+        }
+        release {
+            keyAlias 'combine_chart'
+            keyPassword 'qwe123'
+            storeFile file(buildFile.parent + '/../keys/release.jks')
+            storePassword 'qwe123'
+            v2SigningEnabled false
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }

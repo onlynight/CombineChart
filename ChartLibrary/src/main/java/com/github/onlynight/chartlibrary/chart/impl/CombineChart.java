@@ -1,9 +1,9 @@
-package com.github.onlynight.chartlibrary.chart;
+package com.github.onlynight.chartlibrary.chart.impl;
 
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
 import com.github.onlynight.chartlibrary.data.entity.CandleStickEntity;
-import com.github.onlynight.chartlibrary.render.CombineChartRender;
+import com.github.onlynight.chartlibrary.render.impl.CombineChartRender;
 
 /**
  * Created by lion on 2017/8/22.
@@ -16,11 +16,6 @@ public class CombineChart extends BaseChart<BaseChartData, CombineChartRender> {
 
     public CombineChart(boolean isClipContainer) {
         super(isClipContainer);
-    }
-
-    @Override
-    protected CombineChartRender createChartRender() {
-        return new CombineChartRender(this);
     }
 
     @Override
@@ -57,16 +52,6 @@ public class CombineChart extends BaseChart<BaseChartData, CombineChartRender> {
         } else {
             super.setExtremeValue(data);
         }
-    }
-
-    @Override
-    public boolean isCanZoomLessThanNormal() {
-        return mRender.isCanZoomLessThanNormal();
-    }
-
-    @Override
-    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
-        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
     }
 
     private double getMaxDelta(double max) {

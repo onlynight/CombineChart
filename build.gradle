@@ -12,6 +12,9 @@ buildscript {
 
         // bintray
         classpath 'com.novoda:bintray-release:0.3.4'
+
+        // android packer ng
+        classpath 'com.mcxiaoke.gradle:packer-ng:1.0.9'
     }
 }
 

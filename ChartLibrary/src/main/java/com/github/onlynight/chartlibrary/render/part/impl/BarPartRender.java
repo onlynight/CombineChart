@@ -1,9 +1,9 @@
-package com.github.onlynight.chartlibrary.render.part;
+package com.github.onlynight.chartlibrary.render.part.impl;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Scale;
 import com.github.onlynight.chartlibrary.data.BarChartData;

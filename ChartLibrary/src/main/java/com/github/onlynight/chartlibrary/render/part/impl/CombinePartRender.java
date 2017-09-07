@@ -1,8 +1,8 @@
-package com.github.onlynight.chartlibrary.render.part;
+package com.github.onlynight.chartlibrary.render.part.impl;
 
 import android.graphics.Canvas;
 
-import com.github.onlynight.chartlibrary.chart.BaseChart;
+import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 
 /**
  * Created by lion on 2017/8/29.
@@ -51,16 +51,16 @@ public class CombinePartRender extends BasePartRender {
     }
 
     @Override
-    public float getxDelta() {
-        return mCandleStickPartRender.getxDelta();
+    public float getXDelta() {
+        return mCandleStickPartRender.getXDelta();
     }
 
     @Override
-    public void setxDelta(float xDelta) {
-        mBarPartRender.setxDelta(xDelta);
-        mLinePartRender.setxDelta(xDelta);
-        mCandleStickPartRender.setxDelta(xDelta);
-        super.setxDelta(xDelta);
+    public void setXDelta(float xDelta) {
+        mBarPartRender.setXDelta(xDelta);
+        mLinePartRender.setXDelta(xDelta);
+        mCandleStickPartRender.setXDelta(xDelta);
+        super.setXDelta(xDelta);
     }
 
     @Override

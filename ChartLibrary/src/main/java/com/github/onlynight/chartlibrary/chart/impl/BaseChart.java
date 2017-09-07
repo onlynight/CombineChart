@@ -1,16 +1,19 @@
-package com.github.onlynight.chartlibrary.chart;
+package com.github.onlynight.chartlibrary.chart.impl;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
 
+import com.github.onlynight.chartlibrary.chart.IChart;
+import com.github.onlynight.chartlibrary.chart.OnCrossPointClickListener;
 import com.github.onlynight.chartlibrary.chart.part.Axis;
 import com.github.onlynight.chartlibrary.chart.part.Border;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.entity.BaseEntity;
-import com.github.onlynight.chartlibrary.operate.IChartInterface;
-import com.github.onlynight.chartlibrary.render.BaseChartRender;
+import com.github.onlynight.chartlibrary.render.IChartRender;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +21,7 @@ import java.util.List;
  * Created by lion on 2017/8/11.
  */
 
-public abstract class BaseChart<T extends BaseChartData, Render extends BaseChartRender> implements
-        IChartInterface, BaseChartRender.OnResetExtremeValueListener {
+public class BaseChart<T extends BaseChartData, Render extends IChartRender> implements IChart {
 
     /**
      * common blank
@@ -160,12 +162,17 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         }
     }
 
-    /**
-     * create chart render
-     *
-     * @return
-     */
-    protected abstract Render createChartRender();
+    protected Render createChartRender() {
+        try {
+            Type type = getClass().getGenericSuperclass();
+            Type[] types = ((ParameterizedType) type).getActualTypeArguments();
+            Class<?> clazz = (Class<?>) types[1];
+            return (Render) clazz.getConstructor(BaseChart.class).newInstance(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public int getMarginTextColor() {
         return mMarginTextColor;
@@ -333,23 +340,19 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
     }
 
     @Override
-    public float getxDelta() {
+    public float getXDelta() {
         if (mRender != null) {
-            mRender.getxDelta();
+            mRender.getXDelta();
         }
         return 0;
     }
 
     @Override
-    public void setxDelta(float xDelta) {
+    public void setXDelta(float xDelta) {
         if (mRender != null) {
-            mRender.setxDelta(xDelta);
+            mRender.setXDelta(xDelta);
         }
         resetExtremeValue();
-    }
-
-    @Override
-    public void onResetExtremeValue() {
     }
 
     private void resetExtremeValue() {
@@ -405,9 +408,24 @@ public abstract class BaseChart<T extends BaseChartData, Render extends BaseChar
         mRender.setCrossBorderColor(color);
     }
 
-    public interface OnCrossPointClickListener {
-
-        void onCrossPointClick(List<BaseEntity> entities, List<BaseChartData> chartsData);
-
+    @Override
+    public boolean isCanZoomLessThanNormal() {
+        return mRender.isCanZoomLessThanNormal();
     }
+
+    @Override
+    public void setCanZoomLessThanNormal(boolean canZoomLessThanNormal) {
+        mRender.setCanZoomLessThanNormal(canZoomLessThanNormal);
+    }
+
+    @Override
+    public PointF getCrossPoint() {
+        return mRender.getCrossPoint();
+    }
+
+    @Override
+    public int getCrossBorderColor() {
+        return mRender.getCrossBorderColor();
+    }
+
 }
