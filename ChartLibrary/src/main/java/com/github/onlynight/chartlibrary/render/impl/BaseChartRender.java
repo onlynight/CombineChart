@@ -90,7 +90,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
         measureAxisScale();
     }
 
-    public void onDraw(Canvas canvas) {
+    public void onDrawFrame(Canvas canvas) {
         drawBorder(canvas);
         drawAxis(canvas);
         drawAxisScale(canvas);
@@ -105,24 +105,24 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 mGraphPaint.setColor(mPartRender.getCrossBorderColor());
                 mGraphPaint.setStyle(Paint.Style.FILL);
 
-                float textSize = mChart.getyAxis().getTextSize();
+                float textSize = mChart.getYAxis().getTextSize();
 
                 if (isInChartYRange(point)) {
                     mTextPaint.setTextSize(textSize);
                     mTextPaint.setColor(Color.WHITE);
                     float fontHeight = getFontHeight(mTextPaint);
                     float height = fontHeight + border * 2;
-                    canvas.drawRect(mChart.getxAxis().getEndPos().x, point.y - height / 2,
+                    canvas.drawRect(mChart.getXAxis().getEndPos().x, point.y - height / 2,
                             mChart.getRight(), point.y + height / 2, mGraphPaint);
 
-                    float value = Math.abs(point.y - mChart.getyAxis().getEndPos().y);
-                    float yAxisHeight = Math.abs(mChart.getyAxis().getEndPos().y -
-                            mChart.getyAxis().getStartPos().y);
+                    float value = Math.abs(point.y - mChart.getYAxis().getEndPos().y);
+                    float yAxisHeight = Math.abs(mChart.getYAxis().getEndPos().y -
+                            mChart.getYAxis().getStartPos().y);
 
                     try {
                         double text = value / yAxisHeight * mYValueRange + getYMinValue();
                         String temp = ((BaseChartData) mChart.getDataList().get(0)).getConfig().getYValueFormatter().format(text);
-                        canvas.drawText(temp, mChart.getxAxis().getEndPos().x + BaseChart.BLANK,
+                        canvas.drawText(temp, mChart.getXAxis().getEndPos().x + BaseChart.BLANK,
                                 point.y - height / 2 + border + fontHeight, mTextPaint);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -134,9 +134,9 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 if (entities != null) {
                     drawLegend(canvas, entities);
 
-                    if (mChart.getxAxis().isHasLine()) {
+                    if (mChart.getXAxis().isHasLine()) {
                         if (entities.size() > 0) {
-                            textSize = mChart.getxAxis().getTextSize();
+                            textSize = mChart.getXAxis().getTextSize();
                             mTextPaint.setTextSize(textSize);
                             mTextPaint.setColor(Color.WHITE);
                             long time = entities.get(0).getTime();
@@ -144,7 +144,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                             String timeStr = sdf.format(time);
                             float width = mTextPaint.measureText(timeStr) + border * 2;
                             float start = point.x - width / 2;
-                            float top = mChart.getxAxis().getStartPos().y;
+                            float top = mChart.getXAxis().getStartPos().y;
                             canvas.drawRect(start, top,
                                     point.x + width / 2, mChart.getBottom(), mGraphPaint);
 
@@ -240,81 +240,81 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
     }
 
     private void measureYAxis() {
-        mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
-        mGraphPaint.setStrokeWidth(mChart.getyAxis().getWidth());
+        mTextPaint.setTextSize(mChart.getYAxis().getTextSize());
+        mGraphPaint.setStrokeWidth(mChart.getYAxis().getWidth());
 
         String max = getYAxisTextMaxLength(mChart.getDataList());
         float scaleMaxWidth = mTextPaint.measureText(max);
 
         float x = 0;
 
-        switch (mChart.getyAxis().getPosition()) {
+        switch (mChart.getYAxis().getPosition()) {
             case Axis.POSITION_RIGHT:
-                if (mChart.getyAxis().isHasScaleText()) {
-                    x = mChart.getRight() - (scaleMaxWidth + BaseChart.getBLANK() * 2);
+                if (mChart.getYAxis().isHasScaleText()) {
+                    x = mChart.getRight() - (scaleMaxWidth + BaseChart.BLANK * 2);
                 } else {
                     x = mChart.getRight();
                 }
-                mChart.getxAxis().getStartPos().x = 0;
-                mChart.getxAxis().getEndPos().x = x;
+                mChart.getXAxis().getStartPos().x = 0;
+                mChart.getXAxis().getEndPos().x = x;
                 break;
             case Axis.POSITION_LEFT:
             default:
-                if (mChart.getyAxis().isHasScaleText()) {
-                    x = mChart.getLeft() + scaleMaxWidth + BaseChart.getBLANK() * 2;
+                if (mChart.getYAxis().isHasScaleText()) {
+                    x = mChart.getLeft() + scaleMaxWidth + BaseChart.BLANK * 2;
                 } else {
                     x = mChart.getLeft();
                 }
-                mChart.getxAxis().getStartPos().x = x;
-                mChart.getxAxis().getEndPos().x = mChart.getRight()
+                mChart.getXAxis().getStartPos().x = x;
+                mChart.getXAxis().getEndPos().x = mChart.getRight()
                         - mChart.getBorder().getWidth() / 2;
                 break;
         }
 
-        mChart.getyAxis().getStartPos().x = x;
-        mChart.getyAxis().getEndPos().x = x;
+        mChart.getYAxis().getStartPos().x = x;
+        mChart.getYAxis().getEndPos().x = x;
     }
 
     protected void measureXAxis() {
-        mTextPaint.setTextSize(mChart.getxAxis().getTextSize());
-        mGraphPaint.setStrokeWidth(mChart.getxAxis().getWidth());
+        mTextPaint.setTextSize(mChart.getXAxis().getTextSize());
+        mGraphPaint.setStrokeWidth(mChart.getXAxis().getWidth());
 
         float fontHeight = getFontHeight(mTextPaint);
 
         float y = 0;
 
-        switch (mChart.getxAxis().getPosition()) {
+        switch (mChart.getXAxis().getPosition()) {
             case Axis.POSITION_BOTTOM:
-                if (mChart.getxAxis().isHasScaleText()) {
-                    y = mChart.getBottom() - (fontHeight + BaseChart.getBLANK() * 2);
+                if (mChart.getXAxis().isHasScaleText()) {
+                    y = mChart.getBottom() - (fontHeight + BaseChart.BLANK * 2);
                 } else {
                     y = mChart.getBottom();
                 }
-                mChart.getyAxis().getStartPos().y = mChart.getTop() +
+                mChart.getYAxis().getStartPos().y = mChart.getTop() +
                         mChart.getBorder().getWidth() / 2;
-                mChart.getyAxis().getEndPos().y = y;
+                mChart.getYAxis().getEndPos().y = y;
             default:
                 break;
             case Axis.POSITION_TOP:
-                if (mChart.getxAxis().isHasScaleText()) {
-                    y = mChart.getTop() + fontHeight + BaseChart.getBLANK() * 2;
+                if (mChart.getXAxis().isHasScaleText()) {
+                    y = mChart.getTop() + fontHeight + BaseChart.BLANK * 2;
                 } else {
                     y = mChart.getTop();
                 }
-                mChart.getyAxis().getStartPos().y = y;
-                mChart.getyAxis().getEndPos().y = mChart.getBottom() -
+                mChart.getYAxis().getStartPos().y = y;
+                mChart.getYAxis().getEndPos().y = mChart.getBottom() -
                         mChart.getBorder().getWidth() / 2;
                 break;
         }
 
-        mChart.getxAxis().getStartPos().y = y;
-        mChart.getxAxis().getEndPos().y = y;
+        mChart.getXAxis().getStartPos().y = y;
+        mChart.getXAxis().getEndPos().y = y;
     }
 
     private String getYAxisTextMaxLength(List<Data> dataList) {
         String maxText = "0.00";
         if (mChart != null) {
-            maxText = mChart.generateMaxLengthYAxisScaleText();
+            maxText = mChart.getMaxYAxisScaleText();
         }
         if (TextUtils.isEmpty(maxText)) {
             if (dataList == null) {
@@ -369,15 +369,15 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
     }
 
     private void measureYAxisScale() {
-        int grid = mChart.getyAxis().getGrid();
+        int grid = mChart.getYAxis().getGrid();
         float yAxisHeight;
         if (mChart.getMarginTextSize() > 0) {
-            yAxisHeight = mChart.getyAxis().getEndPos().y -
-                    mChart.getyAxis().getStartPos().y
-                    - mChart.getMarginTextSize() * 2 - BaseChart.getBLANK() * 2;
+            yAxisHeight = mChart.getYAxis().getEndPos().y -
+                    mChart.getYAxis().getStartPos().y
+                    - mChart.getMarginTextSize() * 2 - BaseChart.BLANK * 2;
         } else {
-            yAxisHeight = mChart.getyAxis().getEndPos().y -
-                    mChart.getyAxis().getStartPos().y;
+            yAxisHeight = mChart.getYAxis().getEndPos().y -
+                    mChart.getYAxis().getStartPos().y;
         }
 
         float blank;
@@ -397,7 +397,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
 
         blank = Math.abs(blank);
 
-        List<Scale> scales = mChart.getyAxis().getScales();
+        List<Scale> scales = mChart.getYAxis().getScales();
         scales.clear();
 
         for (int i = 0; i <= grid; i++) {
@@ -407,13 +407,13 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             float y;
             if (mChart.getMarginTextSize() > 0) {
                 y = i * blank + mChart.getMarginTextSize() +
-                        BaseChart.getBLANK() + mChart.getyAxis().getStartPos().y;
+                        BaseChart.BLANK + mChart.getYAxis().getStartPos().y;
             } else {
-                y = i * blank + mChart.getyAxis().getStartPos().y;
+                y = i * blank + mChart.getYAxis().getStartPos().y;
             }
-            startPt.x = mChart.getxAxis().getStartPos().x;
+            startPt.x = mChart.getXAxis().getStartPos().x;
             startPt.y = y;
-            endPt.x = mChart.getxAxis().getEndPos().x;
+            endPt.x = mChart.getXAxis().getEndPos().x;
             endPt.y = y;
 
             scale.setStartPos(startPt);
@@ -426,18 +426,18 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             }
 
             // calculate scale text position
-            if (mChart.getyAxis().isHasScaleText()) {
-                mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
+            if (mChart.getYAxis().isHasScaleText()) {
+                mTextPaint.setTextSize(mChart.getYAxis().getTextSize());
                 float fontHeight = getFontHeight(mTextPaint);
 
-                switch (mChart.getyAxis().getPosition()) {
+                switch (mChart.getYAxis().getPosition()) {
                     case Axis.POSITION_LEFT:
                     default: {
                         PointF scalePos = new PointF();
-                        scalePos.x = mChart.getLeft() + BaseChart.getBLANK();
+                        scalePos.x = mChart.getLeft() + BaseChart.BLANK;
                         scalePos.y = startPt.y;
 
-                        switch (mChart.getyAxis().getTextGravity()) {
+                        switch (mChart.getYAxis().getTextGravity()) {
                             case Axis.TEXT_GRAVITY_CENTER:
                                 scalePos.y += fontHeight / 2;
                                 break;
@@ -451,10 +451,10 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
 
                     case Axis.POSITION_RIGHT: {
                         PointF scalePos = new PointF();
-                        scalePos.x = endPt.x + BaseChart.getBLANK();
+                        scalePos.x = endPt.x + BaseChart.BLANK;
                         scalePos.y = endPt.y;
 
-                        switch (mChart.getyAxis().getTextGravity()) {
+                        switch (mChart.getYAxis().getTextGravity()) {
                             case Axis.TEXT_GRAVITY_CENTER:
                                 scalePos.y += fontHeight / 2;
                                 break;
@@ -482,34 +482,34 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 e.printStackTrace();
             }
 
-            mChart.getyAxis().addScale(scale);
+            mChart.getYAxis().addScale(scale);
         }
     }
 
     private void measureXAxisScale() {
-        float margin = mChart.getxAxis().getScaleMargin();
-        int grid = mChart.getxAxis().getGrid();
-        float width = mChart.getxAxis().getEndPos().x -
-                mChart.getxAxis().getStartPos().x - margin * 2;
+        float margin = mChart.getXAxis().getScaleMargin();
+        int grid = mChart.getXAxis().getGrid();
+        float width = mChart.getXAxis().getEndPos().x -
+                mChart.getXAxis().getStartPos().x - margin * 2;
         float blank = width / grid;
 
-        List<Scale> scales = mChart.getxAxis().getScales();
+        List<Scale> scales = mChart.getXAxis().getScales();
         scales.clear();
         for (int i = 0; i <= grid; i++) {
             PointF startPos = new PointF();
             PointF endPos = new PointF();
 
-            startPos.x = mChart.getxAxis().getStartPos().x + i * blank + margin;
-            endPos.x = mChart.getxAxis().getStartPos().x + i * blank + margin;
+            startPos.x = mChart.getXAxis().getStartPos().x + i * blank + margin;
+            endPos.x = mChart.getXAxis().getStartPos().x + i * blank + margin;
 
             if (mChart.getMarginTextSize() > 0) {
-                startPos.y = mChart.getyAxis().getStartPos().y +
+                startPos.y = mChart.getYAxis().getStartPos().y +
                         mChart.getMarginTextSize() + BaseChart.BLANK;
-                endPos.y = mChart.getyAxis().getEndPos().y -
+                endPos.y = mChart.getYAxis().getEndPos().y -
                         (mChart.getMarginTextSize() + BaseChart.BLANK);
             } else {
-                startPos.y = mChart.getyAxis().getStartPos().y;
-                endPos.y = mChart.getyAxis().getEndPos().y;
+                startPos.y = mChart.getYAxis().getStartPos().y;
+                endPos.y = mChart.getYAxis().getEndPos().y;
             }
 
             Scale scale = new Scale();
@@ -550,19 +550,19 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             }
 
             // calculate scale text position
-            if (mChart.getxAxis().isHasScaleText()) {
-                mTextPaint.setTextSize(mChart.getxAxis().getTextSize());
+            if (mChart.getXAxis().isHasScaleText()) {
+                mTextPaint.setTextSize(mChart.getXAxis().getTextSize());
                 float fontHeight = getFontHeight(mTextPaint);
                 float textWidth = mTextPaint.measureText(scale.getScaleText());
 
-                switch (mChart.getxAxis().getPosition()) {
+                switch (mChart.getXAxis().getPosition()) {
                     case Axis.POSITION_TOP:
                     default: {
                         PointF scalePos = new PointF();
                         scalePos.x = startPos.x;
-                        scalePos.y = startPos.y - BaseChart.getBLANK();
+                        scalePos.y = startPos.y - BaseChart.BLANK;
 
-                        switch (mChart.getxAxis().getTextGravity()) {
+                        switch (mChart.getXAxis().getTextGravity()) {
                             case Axis.TEXT_GRAVITY_CENTER:
                                 scalePos.x -= (textWidth / 2);
                                 break;
@@ -577,14 +577,14 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                     case Axis.POSITION_BOTTOM: {
                         PointF scalePos = new PointF();
                         scalePos.x = endPos.x;
-                        scalePos.y = endPos.y + fontHeight + BaseChart.getBLANK();
+                        scalePos.y = endPos.y + fontHeight + BaseChart.BLANK;
 
                         if (mChart.getMarginTextSize() > 0) {
                             scalePos.y += mChart.getMarginTextSize()
-                                    + BaseChart.getBLANK();
+                                    + BaseChart.BLANK;
                         }
 
-                        switch (mChart.getxAxis().getTextGravity()) {
+                        switch (mChart.getXAxis().getTextGravity()) {
                             case Axis.TEXT_GRAVITY_CENTER:
                                 scalePos.x -= (textWidth / 2);
                                 break;
@@ -599,7 +599,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 }
             }
 
-            mChart.getxAxis().addScale(scale);
+            mChart.getXAxis().addScale(scale);
         }
     }
 
@@ -670,12 +670,12 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
     private void drawAxis(Canvas canvas) {
 
         // draw axis y
-        if (mChart.getyAxis().isHasLine()) {
-            mGraphPaint.setStrokeWidth(mChart.getyAxis().getWidth());
-            mGraphPaint.setColor(mChart.getyAxis().getColor());
+        if (mChart.getYAxis().isHasLine()) {
+            mGraphPaint.setStrokeWidth(mChart.getYAxis().getWidth());
+            mGraphPaint.setColor(mChart.getYAxis().getColor());
             mGraphPaint.setStyle(Paint.Style.STROKE);
 
-            if (mChart.getyAxis().getLineType() ==
+            if (mChart.getYAxis().getLineType() ==
                     Axis.LINE_TYPE_DASH) {
                 PathEffect effects =
                         new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
@@ -684,19 +684,19 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 mGraphPaint.setPathEffect(null);
             }
 
-            canvas.drawLine(mChart.getyAxis().getStartPos().x,
-                    mChart.getyAxis().getStartPos().y,
-                    mChart.getyAxis().getEndPos().x,
-                    mChart.getyAxis().getEndPos().y, mGraphPaint);
+            canvas.drawLine(mChart.getYAxis().getStartPos().x,
+                    mChart.getYAxis().getStartPos().y,
+                    mChart.getYAxis().getEndPos().x,
+                    mChart.getYAxis().getEndPos().y, mGraphPaint);
         }
 
         // draw axis x
-        if (mChart.getxAxis().isHasLine()) {
-            mGraphPaint.setStrokeWidth(mChart.getxAxis().getWidth());
-            mGraphPaint.setColor(mChart.getxAxis().getColor());
+        if (mChart.getXAxis().isHasLine()) {
+            mGraphPaint.setStrokeWidth(mChart.getXAxis().getWidth());
+            mGraphPaint.setColor(mChart.getXAxis().getColor());
             mGraphPaint.setStyle(Paint.Style.STROKE);
 
-            if (mChart.getxAxis().getLineType() ==
+            if (mChart.getXAxis().getLineType() ==
                     Axis.LINE_TYPE_DASH) {
                 PathEffect effects =
                         new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
@@ -705,21 +705,21 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                 mGraphPaint.setPathEffect(null);
             }
 
-            canvas.drawLine(mChart.getxAxis().getStartPos().x,
-                    mChart.getxAxis().getStartPos().y,
-                    mChart.getxAxis().getEndPos().x,
-                    mChart.getxAxis().getEndPos().y, mGraphPaint);
+            canvas.drawLine(mChart.getXAxis().getStartPos().x,
+                    mChart.getXAxis().getStartPos().y,
+                    mChart.getXAxis().getEndPos().x,
+                    mChart.getXAxis().getEndPos().y, mGraphPaint);
         }
     }
 
     private void drawAxisScale(Canvas canvas) {
 
-        mGraphPaint.setStrokeWidth(mChart.getyAxis().getScaleLineWidth());
-        mGraphPaint.setColor(mChart.getyAxis().getScaleLineColor());
-        mTextPaint.setTextSize(mChart.getyAxis().getTextSize());
-        mTextPaint.setColor(mChart.getyAxis().getTextColor());
+        mGraphPaint.setStrokeWidth(mChart.getYAxis().getScaleLineWidth());
+        mGraphPaint.setColor(mChart.getYAxis().getScaleLineColor());
+        mTextPaint.setTextSize(mChart.getYAxis().getTextSize());
+        mTextPaint.setColor(mChart.getYAxis().getTextColor());
 
-        if (mChart.getyAxis().getScaleLineType() ==
+        if (mChart.getYAxis().getScaleLineType() ==
                 Axis.LINE_TYPE_DASH) {
             PathEffect effects =
                     new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
@@ -728,10 +728,10 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             mGraphPaint.setPathEffect(null);
         }
 
-        boolean hasScaleLine = mChart.getyAxis().isHasScaleLine();
-        boolean hasScaleText = mChart.getyAxis().isHasScaleText();
+        boolean hasScaleLine = mChart.getYAxis().isHasScaleLine();
+        boolean hasScaleText = mChart.getYAxis().isHasScaleText();
 
-        for (Scale scale : mChart.getyAxis().getScales()) {
+        for (Scale scale : mChart.getYAxis().getScales()) {
             if (hasScaleLine) {
                 Path path = new Path();
                 path.moveTo(scale.getStartPos().x, scale.getStartPos().y);
@@ -745,10 +745,10 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             }
         }
 
-        mGraphPaint.setStrokeWidth(mChart.getxAxis().getScaleLineWidth());
-        mGraphPaint.setColor(mChart.getxAxis().getScaleLineColor());
+        mGraphPaint.setStrokeWidth(mChart.getXAxis().getScaleLineWidth());
+        mGraphPaint.setColor(mChart.getXAxis().getScaleLineColor());
 
-        if (mChart.getxAxis().getScaleLineType() ==
+        if (mChart.getXAxis().getScaleLineType() ==
                 Axis.LINE_TYPE_DASH) {
             PathEffect effects =
                     new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
@@ -757,10 +757,10 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
             mGraphPaint.setPathEffect(null);
         }
 
-        hasScaleLine = mChart.getxAxis().isHasScaleLine();
-        hasScaleText = mChart.getxAxis().isHasScaleText();
+        hasScaleLine = mChart.getXAxis().isHasScaleLine();
+        hasScaleText = mChart.getXAxis().isHasScaleText();
 
-        for (Scale scale : mChart.getxAxis().getScales()) {
+        for (Scale scale : mChart.getXAxis().getScales()) {
             if (hasScaleLine) {
                 Path path = new Path();
                 path.moveTo(scale.getStartPos().x, scale.getStartPos().y);
@@ -776,7 +776,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
     }
 
     private void clipContainer(Canvas canvas) {
-        List<Scale> scales = mChart.getyAxis().getScales();
+        List<Scale> scales = mChart.getYAxis().getScales();
         if (scales != null && scales.size() > 0) {
             mContainerPath.reset();
 //            canvas.clipPath(mContainerPath);
@@ -882,7 +882,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
                     BaseEntity temp1 = null;
                     for (int i = 0; i < data.getData().size(); i++) {
                         temp1 = (BaseEntity) data.getData().get(i);
-                        if (temp1.getX() >= mChart.getxAxis().getStartPos().x) {
+                        if (temp1.getX() >= mChart.getXAxis().getStartPos().x) {
                             startIndex = i;
                             break;
                         }
@@ -890,7 +890,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
 
                     for (int i = 0; i < data.getData().size(); i++) {
                         temp1 = (BaseEntity) data.getData().get(i);
-                        if (temp1.getX() >= mChart.getxAxis().getEndPos().x) {
+                        if (temp1.getX() >= mChart.getXAxis().getEndPos().x) {
                             endIndex = i;
                             break;
                         }
@@ -957,16 +957,16 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
     }
 
     private boolean isInChartYRange(PointF point) {
-        float top = mChart.getyAxis().getScales().get(0).getStartPos().y;
-        float bottom = mChart.getyAxis().getScales().get(mChart.getyAxis().getScales().size() - 1).getStartPos().y;
+        float top = mChart.getYAxis().getScales().get(0).getStartPos().y;
+        float bottom = mChart.getYAxis().getScales().get(mChart.getYAxis().getScales().size() - 1).getStartPos().y;
 
         return point.y > top &&
                 point.y < bottom;
     }
 
     private boolean isInChartXRange(PointF point) {
-        float left = mChart.getxAxis().getStartPos().x;
-        float right = mChart.getyAxis().getEndPos().x;
+        float left = mChart.getXAxis().getStartPos().x;
+        float right = mChart.getYAxis().getEndPos().x;
 
         return point.x > left &&
                 point.x < right;

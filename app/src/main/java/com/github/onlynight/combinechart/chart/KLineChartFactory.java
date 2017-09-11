@@ -49,7 +49,7 @@ public class KLineChartFactory {
         chart.addData(mKLineRepository.getMa10LineChartData());
         chart.addData(mKLineRepository.getMa20LineChartData());
 
-        Axis y = chart.getyAxis();
+        Axis y = chart.getYAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -59,7 +59,7 @@ public class KLineChartFactory {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = chart.getxAxis();
+        Axis x = chart.getXAxis();
         x.setPosition(Axis.POSITION_BOTTOM);
         x.setColor(Color.BLACK);
         x.setWidth(1);
@@ -90,7 +90,7 @@ public class KLineChartFactory {
         chart.addData(mKLineRepository.getVolMA10LineChartData());
         chart.addData(mKLineRepository.getVolMA20LineChartData());
 
-        Axis y = chart.getyAxis();
+        Axis y = chart.getYAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -100,7 +100,7 @@ public class KLineChartFactory {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = chart.getxAxis();
+        Axis x = chart.getXAxis();
         x.setPosition(Axis.POSITION_TOP);
         x.setColor(Color.BLACK);
         x.setWidth(1);
@@ -132,7 +132,7 @@ public class KLineChartFactory {
         chart.addData(mKLineRepository.getVolMA10LineChartData());
         chart.addData(mKLineRepository.getVolMA20LineChartData());
 
-        Axis y = chart.getyAxis();
+        Axis y = chart.getYAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -142,7 +142,7 @@ public class KLineChartFactory {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = chart.getxAxis();
+        Axis x = chart.getXAxis();
         x.setPosition(Axis.POSITION_BOTTOM);
         x.setColor(Color.BLACK);
         x.setWidth(1);
@@ -166,7 +166,7 @@ public class KLineChartFactory {
         chart.setWeight(0.5f);
         chart.setMarginTextSize(mContext.getResources().getDimension(R.dimen.textSize10));
         chart.setMaxYAxisScaleText(MAX_Y_SCALE_TEXT);
-        Axis y = chart.getyAxis();
+        Axis y = chart.getYAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -176,7 +176,7 @@ public class KLineChartFactory {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = chart.getxAxis();
+        Axis x = chart.getXAxis();
         x.setPosition(Axis.POSITION_TOP);
         x.setColor(Color.BLACK);
         x.setWidth(1);

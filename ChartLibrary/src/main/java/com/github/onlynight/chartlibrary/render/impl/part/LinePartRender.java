@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render.part.impl;
+package com.github.onlynight.chartlibrary.render.impl.part;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -45,9 +45,9 @@ public class LinePartRender extends BasePartRender {
 
         mGraphPaint.setStyle(Paint.Style.STROKE);
 
-        List<Scale> scales = mChart.getyAxis().getScales();
-        float chartWidth = mChart.getxAxis().getEndPos().x -
-                mChart.getxAxis().getStartPos().x;
+        List<Scale> scales = mChart.getYAxis().getScales();
+        float chartWidth = mChart.getXAxis().getEndPos().x -
+                mChart.getXAxis().getStartPos().x;
         float chartHeight = scales.get(scales.size() - 1).getStartPos().y -
                 scales.get(0).getStartPos().y;
         double maxValue = getYMaxValue();
@@ -70,8 +70,8 @@ public class LinePartRender extends BasePartRender {
             for (int i = 0; i < size; i++) {
                 float[] temp = calculateChartPos(entities, config, i,
                         chartWidth, chartHeight, minValue, valueRange);
-                if (temp != null && temp[0] >= mChart.getxAxis().getStartPos().x &&
-                        temp[0] <= mChart.getxAxis().getEndPos().x) {
+                if (temp != null && temp[0] >= mChart.getXAxis().getStartPos().x &&
+                        temp[0] <= mChart.getXAxis().getEndPos().x) {
                     canvas.drawLine(lastPt[0], lastPt[1], temp[0], temp[1], mGraphPaint);
                     lastPt[0] = temp[0];
                     lastPt[1] = temp[1];
@@ -83,7 +83,7 @@ public class LinePartRender extends BasePartRender {
     private float[] calculateChartPos(List<LineEntity> entities,
                                       LineChartDataConfig config, int index, float chartWidth,
                                       float chartHeight, double minValue, double valueRange) {
-        List<Scale> scales = mChart.getyAxis().getScales();
+        List<Scale> scales = mChart.getYAxis().getScales();
         if (scales == null || scales.size() <= 0) {
             return null;
         }
@@ -100,14 +100,14 @@ public class LinePartRender extends BasePartRender {
         float y = scales.get(0).getStartPos().y +
                 chartHeight - (float) ((entity.getY() - minValue) / valueRange * chartHeight);
         float x;
-        switch (mChart.getyAxis().getPosition()) {
+        switch (mChart.getYAxis().getPosition()) {
             case Axis.POSITION_RIGHT:
-                x = mChart.getxAxis().getEndPos().x -
+                x = mChart.getXAxis().getEndPos().x -
                         blank * (entities.size() - index - 1) * mScale;
                 break;
             case Axis.POSITION_LEFT:
             default:
-                x = blank * index * mScale + mChart.getxAxis().getStartPos().x;
+                x = blank * index * mScale + mChart.getXAxis().getStartPos().x;
                 break;
         }
         x += mXDelta;

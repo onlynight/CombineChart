@@ -21,7 +21,7 @@ import java.util.List;
  * Created by lion on 2017/8/11.
  */
 
-public class BaseChart<T extends BaseChartData, Render extends IChartRender> implements IChart {
+public class BaseChart<T extends BaseChartData, Render extends IChartRender> implements IChart<T> {
 
     /**
      * common blank
@@ -83,11 +83,6 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
     protected Render mRender;
 
     /**
-     * is this chart align other chart y axis.
-     */
-    private boolean mIsAlignYAxis = true;
-
-    /**
      * y axis max length text
      */
     private String mMaxYAxisScaleText = "";
@@ -104,27 +99,33 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
         this.mXAxis.setPosition(Axis.POSITION_BOTTOM);
         this.mDataList = new ArrayList<>();
         this.mRender = createChartRender();
-        this.mRender.setIsClipContainer(isClipContainer);
+        if (this.mRender != null) {
+            this.mRender.setIsClipContainer(isClipContainer);
+        }
     }
 
     public void setOnCrossPointClickListener(OnCrossPointClickListener onCrossPointClickListener) {
         mRender.setOnCrossPointClickListener(onCrossPointClickListener);
     }
 
+    @Override
     public void setIsClipContainer(boolean isClipContainer) {
         if (mRender != null) {
             mRender.setIsClipContainer(isClipContainer);
         }
     }
 
+    @Override
     public boolean isClipContainer() {
         return mRender != null && mRender.isClipContainer();
     }
 
+    @Override
     public boolean isAutoZoomYAxis() {
         return mRender != null && mRender.isAutoZoomYAxis();
     }
 
+    @Override
     public void setIsAutoZoomYAxis(boolean isAutoZoomYAxis) {
         if (mRender != null) {
             mRender.setIsAutoZoomYAxis(isAutoZoomYAxis);
@@ -134,6 +135,7 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
     /**
      * on measure chart part proc
      */
+    @Override
     public void onMeasure() {
         if (mRender != null) {
             mRender.onMeasure();
@@ -145,9 +147,10 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
      *
      * @param canvas
      */
-    public void onDraw(Canvas canvas) {
+    @Override
+    public void onDrawFrame(Canvas canvas) {
         if (mRender != null) {
-            mRender.onDraw(canvas);
+            mRender.onDrawFrame(canvas);
         }
     }
 
@@ -156,13 +159,14 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
      *
      * @param canvas
      */
+    @Override
     public void onDrawChart(Canvas canvas) {
         if (mRender != null) {
             mRender.onDrawChart(canvas);
         }
     }
 
-    protected Render createChartRender() {
+    private Render createChartRender() {
         try {
             Type type = getClass().getGenericSuperclass();
             Type[] types = ((ParameterizedType) type).getActualTypeArguments();
@@ -174,62 +178,77 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
         return null;
     }
 
+    @Override
     public int getMarginTextColor() {
         return mMarginTextColor;
     }
 
+    @Override
     public void setMarginTextColor(int marginTextColor) {
         this.mMarginTextColor = marginTextColor;
     }
 
+    @Override
     public int getLeft() {
         return mLeft;
     }
 
+    @Override
     public void setLeft(int mLeft) {
         this.mLeft = mLeft;
     }
 
+    @Override
     public int getTop() {
         return mTop;
     }
 
+    @Override
     public void setTop(int mTop) {
         this.mTop = mTop;
     }
 
+    @Override
     public int getRight() {
         return mRight;
     }
 
+    @Override
     public void setRight(int mRight) {
         this.mRight = mRight;
     }
 
+    @Override
     public int getBottom() {
         return mBottom;
     }
 
+    @Override
     public void setBottom(int mBottom) {
         this.mBottom = mBottom;
     }
 
+    @Override
     public double getWeight() {
         return mWeight;
     }
 
+    @Override
     public void setWeight(double weight) {
         this.mWeight = weight;
     }
 
+    @Override
     public Border getBorder() {
         return mBorder;
     }
 
+    @Override
     public void setBorder(Border border) {
         this.mBorder = border;
     }
 
+    @Override
     public void setArea(int left, int top, int right, int bottom) {
         this.mLeft = left;
         this.mTop = top;
@@ -240,26 +259,32 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
         this.mHeight = bottom - top;
     }
 
-    public Axis getxAxis() {
+    @Override
+    public Axis getXAxis() {
         return mXAxis;
     }
 
-    public void setxAxis(Axis xAxis) {
+    @Override
+    public void setXAxis(Axis xAxis) {
         this.mXAxis = xAxis;
     }
 
-    public Axis getyAxis() {
+    @Override
+    public Axis getYAxis() {
         return mYAxis;
     }
 
-    public void setyAxis(Axis yAxis) {
+    @Override
+    public void setYAxis(Axis yAxis) {
         this.mYAxis = yAxis;
     }
 
+    @Override
     public List<T> getDataList() {
         return mDataList;
     }
 
+    @Override
     public void addData(T data) {
         if (data != null) {
             mDataList.add(data);
@@ -291,36 +316,29 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
         data.setMaxIndex(maxIndex);
     }
 
+    @Override
     public void clearData() {
         mDataList.clear();
     }
 
-    public boolean isAlignYAxis() {
-        return mIsAlignYAxis;
-    }
-
-    public void setAlignYAxis(boolean alignYAxis) {
-        mIsAlignYAxis = alignYAxis;
-    }
-
+    @Override
     public int getWidth() {
         return mWidth;
     }
 
+    @Override
     public int getHeight() {
         return mHeight;
     }
 
+    @Override
     public float getMarginTextSize() {
         return mMarginTextSize;
     }
 
+    @Override
     public void setMarginTextSize(float marginTextSize) {
         this.mMarginTextSize = marginTextSize;
-    }
-
-    public static int getBLANK() {
-        return BLANK;
     }
 
     @Override
@@ -372,18 +390,22 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
      *
      * @return if is null or is "" then it will measure the max text width
      */
-    public String generateMaxLengthYAxisScaleText() {
+    @Override
+    public String getMaxYAxisScaleText() {
         return mMaxYAxisScaleText;
     }
 
+    @Override
     public void setMaxYAxisScaleText(String maxYAxisScaleText) {
         this.mMaxYAxisScaleText = maxYAxisScaleText;
     }
 
+    @Override
     public boolean isShowLegend() {
         return mIsShowLegend;
     }
 
+    @Override
     public void setIsShowLegend(boolean isShowLegend) {
         this.mIsShowLegend = isShowLegend;
     }

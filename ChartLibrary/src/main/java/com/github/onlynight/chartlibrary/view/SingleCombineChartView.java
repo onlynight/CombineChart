@@ -11,14 +11,14 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 
-import com.github.onlynight.chartlibrary.chart.IChart;
+import com.github.onlynight.chartlibrary.chart.IChartOperate;
 import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 
 /**
  * Created by lion on 2017/8/10.
  */
 
-public class SingleCombineChartView extends View implements IChartView, IChart {
+public class SingleCombineChartView extends View implements IChartView, IChartOperate {
 
     private BaseChart mChart;
     private float mScale = 1f;
@@ -65,7 +65,7 @@ public class SingleCombineChartView extends View implements IChartView, IChart {
         super.onDraw(canvas);
         onLayoutChart(getWidth(), getHeight());
         mChart.onMeasure();
-        mChart.onDraw(canvas);
+        mChart.onDrawFrame(canvas);
         mChart.onDrawChart(canvas);
     }
 

@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render.part.impl;
+package com.github.onlynight.chartlibrary.render.impl.part;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -49,21 +49,21 @@ public class CandleStickPartRender extends BasePartRender {
             double range = data.getYMax() - data.getYMin();
             float chartHeight = 0;
 
-            if (mChart != null && mChart.getyAxis().getScales() != null &&
-                    mChart.getyAxis().getScales().size() >= 2) {
-                List<Scale> scales = mChart.getyAxis().getScales();
+            if (mChart != null && mChart.getYAxis().getScales() != null &&
+                    mChart.getYAxis().getScales().size() >= 2) {
+                List<Scale> scales = mChart.getYAxis().getScales();
                 chartHeight = Math.abs(scales.get(0).getStartPos().y -
                         scales.get(scales.size() - 1).getEndPos().y);
                 float startY = scales.get(scales.size() - 1).getEndPos().y;
-                float endX = mChart.getxAxis().getEndPos().x;
-                float startX = mChart.getxAxis().getStartPos().x;
+                float endX = mChart.getXAxis().getEndPos().x;
+                float startX = mChart.getXAxis().getStartPos().x;
 
                 float x1, y1, x2, y2;
                 float highX, highY, lowX, lowY;
                 int size = data.getData().size();
                 for (int i = 0; i < size; i++) {
                     CandleStickEntity entity = data.getData().get(i);
-                    switch (mChart.getyAxis().getPosition()) {
+                    switch (mChart.getYAxis().getPosition()) {
                         case Axis.POSITION_RIGHT:
                             x1 = endX - ((size - i) * config.getBarWidth()) * mScale
                                     + mXDelta;
@@ -104,8 +104,8 @@ public class CandleStickPartRender extends BasePartRender {
                         y2 += 2;
                     }
 
-                    if (x1 >= mChart.getxAxis().getStartPos().x &&
-                            x1 <= mChart.getxAxis().getEndPos().x) {
+                    if (x1 >= mChart.getXAxis().getStartPos().x &&
+                            x1 <= mChart.getXAxis().getEndPos().x) {
                         canvas.drawRect(x1 + BAR_BLANK, y1, x2, y2, mGraphPaint);
                         canvas.drawLine(tempX, highY, tempX, lowY, mGraphPaint);
                     }
@@ -121,8 +121,8 @@ public class CandleStickPartRender extends BasePartRender {
     private void drawMinAndMax(CandleStickChartData data, Canvas canvas) {
         if (data.getShowData() != null &&
                 data.getShowData().size() > data.getMaxIndex() &&
-                mChart.getyAxis().getScales() != null &&
-                mChart.getyAxis().getScales().size() > 0) {
+                mChart.getYAxis().getScales() != null &&
+                mChart.getYAxis().getScales().size() > 0) {
 
             mTextPaint.setTextSize(mChart.getMarginTextSize());
             mTextPaint.setColor(mChart.getMarginTextColor());
@@ -141,20 +141,20 @@ public class CandleStickPartRender extends BasePartRender {
 
             float textWidth = mTextPaint.measureText(low);
             double tempX = minEntity.getX() + textWidth;
-            if (tempX > mChart.getxAxis().getEndPos().x) {
+            if (tempX > mChart.getXAxis().getEndPos().x) {
                 tempX = minEntity.getX() - textWidth;
             } else {
                 tempX = minEntity.getX();
             }
 
-            int size = mChart.getyAxis().getScales().size() - 1;
+            int size = mChart.getYAxis().getScales().size() - 1;
 
             if (size < 0) {
                 size = 0;
             }
 
             canvas.drawText(low, (float) tempX,
-                    mChart.getyAxis().getScales().
+                    mChart.getYAxis().getScales().
                             get(size).getStartPos().y +
                             BaseChart.BLANK + getFontHeight(mTextPaint), mTextPaint);
 
@@ -166,7 +166,7 @@ public class CandleStickPartRender extends BasePartRender {
             }
             textWidth = mTextPaint.measureText(high);
             tempX = maxEntity.getX() + textWidth;
-            if (tempX > mChart.getxAxis().getEndPos().x) {
+            if (tempX > mChart.getXAxis().getEndPos().x) {
                 tempX = maxEntity.getX() - textWidth;
             } else {
                 tempX = maxEntity.getX();

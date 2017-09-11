@@ -12,7 +12,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.github.onlynight.chartlibrary.chart.IChart;
-import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
+import com.github.onlynight.chartlibrary.chart.IChartOperate;
 import com.github.onlynight.chartlibrary.data.BaseChartData;
 import com.github.onlynight.chartlibrary.data.config.BaseChartDataConfig;
 
@@ -23,9 +23,9 @@ import java.util.List;
  * Created by lion on 2017/8/10.
  */
 
-public class CombineChartView extends View implements IChartView, IChart {
+public class CombineChartView extends View implements IChartView, IChartOperate {
 
-    private List<BaseChart> mCharts;
+    private List<IChart> mCharts;
     private float mScale = 1f;
     private float xDelta = 0;
 
@@ -65,7 +65,7 @@ public class CombineChartView extends View implements IChartView, IChart {
         mTouchPoint = new PointF(-1, -1);
     }
 
-    public void addChart(BaseChart chart) {
+    public void addChart(IChart chart) {
         if (chart != null) {
             chart.setIsClipContainer(true);
             mCharts.add(chart);
@@ -81,13 +81,13 @@ public class CombineChartView extends View implements IChartView, IChart {
     private void onLayoutChart(int width, int height) {
         double total = 0;
         mChartsHeight.clear();
-        for (BaseChart chart : mCharts) {
+        for (IChart chart : mCharts) {
             total += chart.getWeight();
         }
 
         if (total > 0) {
 //            int height = getHeight();
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 mChartsHeight.add(chart.getWeight() / total * height);
             }
 
@@ -117,15 +117,15 @@ public class CombineChartView extends View implements IChartView, IChart {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        for (BaseChart chart : mCharts) {
+        for (IChart chart : mCharts) {
             chart.onMeasure();
         }
 
-        for (BaseChart chart : mCharts) {
-            chart.onDraw(canvas);
+        for (IChart chart : mCharts) {
+            chart.onDrawFrame(canvas);
         }
 
-        for (BaseChart chart : mCharts) {
+        for (IChart chart : mCharts) {
             chart.onDrawChart(canvas);
         }
     }
@@ -156,7 +156,7 @@ public class CombineChartView extends View implements IChartView, IChart {
         this.mScale = scale;
 
         if (mCharts != null) {
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 chart.setScale(this.mScale);
             }
         }
@@ -180,7 +180,7 @@ public class CombineChartView extends View implements IChartView, IChart {
         }
 
         this.xDelta = xDelta;
-        for (BaseChart chart : mCharts) {
+        for (IChart chart : mCharts) {
             chart.setXDelta(this.xDelta);
         }
     }
@@ -199,7 +199,7 @@ public class CombineChartView extends View implements IChartView, IChart {
     @Override
     public void setCrossPoint(PointF crossPoint) {
         if (mCharts != null && mIsShowCrossPoint) {
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 chart.setCrossPoint(crossPoint);
             }
         }
@@ -217,12 +217,12 @@ public class CombineChartView extends View implements IChartView, IChart {
 
     private int calculateMax() {
         try {
-            BaseChart chart = mCharts.get(0);
+            IChart chart = mCharts.get(0);
             BaseChartData chartData = (BaseChartData) chart.getDataList().get(0);
             BaseChartDataConfig config = chartData.getConfig();
             int size = chartData.getData().size();
-            return (int) (config.getBarWidth() * size * mScale - chart.getxAxis().getEndPos().x
-                    + chart.getxAxis().getStartPos().x);
+            return (int) (config.getBarWidth() * size * mScale - chart.getXAxis().getEndPos().x
+                    + chart.getXAxis().getStartPos().x);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -314,7 +314,7 @@ public class CombineChartView extends View implements IChartView, IChart {
     @Override
     public void setCrossColor(int crossColor) {
         if (mCharts != null) {
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 chart.setCrossColor(crossColor);
             }
         }
@@ -338,7 +338,7 @@ public class CombineChartView extends View implements IChartView, IChart {
     @Override
     public void setCrossLineWidth(float crossLineWidth) {
         if (mCharts != null) {
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 chart.setCrossLineWidth(crossLineWidth);
             }
         }
@@ -347,7 +347,7 @@ public class CombineChartView extends View implements IChartView, IChart {
     @Override
     public void setCrossBorderColor(int color) {
         if (mCharts != null) {
-            for (BaseChart chart : mCharts) {
+            for (IChart chart : mCharts) {
                 chart.setCrossBorderColor(color);
             }
         }

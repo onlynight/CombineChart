@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render.part.impl;
+package com.github.onlynight.chartlibrary.render.impl.part;
 
 import android.graphics.Canvas;
 

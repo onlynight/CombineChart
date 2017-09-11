@@ -1,35 +1,91 @@
 package com.github.onlynight.chartlibrary.chart;
 
-import android.graphics.PointF;
+import android.graphics.Canvas;
+
+import com.github.onlynight.chartlibrary.chart.part.Axis;
+import com.github.onlynight.chartlibrary.chart.part.Border;
+import com.github.onlynight.chartlibrary.data.BaseChartData;
+
+import java.util.List;
 
 /**
  * Created by lion on 2017/8/21.
  */
 
-public interface IChart {
+public interface IChart<T extends BaseChartData> extends IChartOperate {
 
-    float getScale();
+    void setWeight(double weight);
 
-    void setScale(float scale);
+    double getWeight();
 
-    float getXDelta();
+    void setArea(int left, int top, int right, int bottom);
 
-    void setXDelta(float xDelta);
+    void onMeasure();
 
-    boolean isCanZoomLessThanNormal();
+    void onDrawFrame(Canvas canvas);
 
-    void setCanZoomLessThanNormal(boolean canZoomLessThanNormal);
+    void onDrawChart(Canvas canvas);
 
-    void setCrossPoint(PointF crossPoint);
+    List<T> getDataList();
 
-    PointF getCrossPoint();
+    void clearData();
 
-    void setCrossColor(int crossColor);
+    int getWidth();
 
-    int getCrossBorderColor();
+    int getHeight();
 
-    void setCrossLineWidth(float crossLineWidth);
+    Axis getXAxis();
 
-    void setCrossBorderColor(int color);
+    Axis getYAxis();
+
+    void setIsAutoZoomYAxis(boolean isAutoZoomYAxis);
+
+    boolean isAutoZoomYAxis();
+
+    float getMarginTextSize();
+
+    void setMarginTextSize(float marginTextSize);
+
+    String getMaxYAxisScaleText();
+
+    void setMaxYAxisScaleText(String maxYAxisScaleText);
+
+    void setIsClipContainer(boolean clipContainer);
+
+    boolean isClipContainer();
+
+    boolean isShowLegend();
+
+    void setIsShowLegend(boolean isShowLegend);
+
+    int getMarginTextColor();
+
+    void setMarginTextColor(int marginTextColor);
+
+    int getLeft();
+
+    void setLeft(int mLeft);
+
+    int getTop();
+
+    void setTop(int mTop);
+
+    int getRight();
+
+    void setRight(int mRight);
+
+    int getBottom();
+
+    void setBottom(int mBottom);
+
+    Border getBorder();
+
+    void setBorder(Border border);
+
+    void setXAxis(Axis xAxis);
+
+    void setYAxis(Axis yAxis);
+
+    void addData(T data);
 
 }

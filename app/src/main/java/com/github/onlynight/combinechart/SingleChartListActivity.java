@@ -76,7 +76,7 @@ public class SingleChartListActivity extends AppCompatActivity {
         LineChartData data20 = generateCombineLineData1(Color.MAGENTA, 20, data);
         candleChart.addData(data20);
 
-        Axis y = candleChart.getyAxis();
+        Axis y = candleChart.getYAxis();
         y.setPosition(Axis.POSITION_RIGHT);
         y.setColor(Color.BLACK);
         y.setWidth(1);
@@ -86,7 +86,7 @@ public class SingleChartListActivity extends AppCompatActivity {
         y.setTextGravity(Axis.TEXT_GRAVITY_CENTER);
         y.setTextColor(Color.BLACK);
 
-        Axis x = candleChart.getxAxis();
+        Axis x = candleChart.getXAxis();
         x.setPosition(Axis.POSITION_BOTTOM);
         x.setColor(Color.BLACK);
         x.setWidth(1);

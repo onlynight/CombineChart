@@ -2,7 +2,7 @@ package com.github.onlynight.chartlibrary.render.impl;
 
 import com.github.onlynight.chartlibrary.chart.impl.BaseChart;
 import com.github.onlynight.chartlibrary.data.CandleStickChartData;
-import com.github.onlynight.chartlibrary.render.part.impl.CandleStickPartRender;
+import com.github.onlynight.chartlibrary.render.impl.part.CandleStickPartRender;
 
 /**
  * Created by lion on 2017/9/7.

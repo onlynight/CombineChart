@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render.part.impl;
+package com.github.onlynight.chartlibrary.render.impl.part;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -45,20 +45,20 @@ public class BarPartRender extends BasePartRender {
             double range = data.getYMax() - data.getYMin();
             float chartHeight = 0;
 
-            if (mChart != null && mChart.getyAxis().getScales() != null &&
-                    mChart.getyAxis().getScales().size() >= 2) {
-                List<Scale> scales = mChart.getyAxis().getScales();
+            if (mChart != null && mChart.getYAxis().getScales() != null &&
+                    mChart.getYAxis().getScales().size() >= 2) {
+                List<Scale> scales = mChart.getYAxis().getScales();
                 chartHeight = Math.abs(scales.get(0).getStartPos().y -
                         scales.get(scales.size() - 1).getEndPos().y);
                 float startY = scales.get(scales.size() - 1).getEndPos().y;
-                float endX = mChart.getxAxis().getEndPos().x;
-                float startX = mChart.getxAxis().getStartPos().x;
+                float endX = mChart.getXAxis().getEndPos().x;
+                float startX = mChart.getXAxis().getStartPos().x;
 
                 float x1, y1, x2, y2 = startY;
                 int size = data.getData().size();
                 for (int i = 0; i < size; i++) {
                     BarEntity temp = data.getData().get(i);
-                    switch (mChart.getyAxis().getPosition()) {
+                    switch (mChart.getYAxis().getPosition()) {
                         case Axis.POSITION_RIGHT:
                             x1 = endX - ((size - i) * config.getBarWidth()) * mScale
                                     + mXDelta;
@@ -77,8 +77,8 @@ public class BarPartRender extends BasePartRender {
                     mGraphPaint.setColor(temp.getColor());
                     temp.setX(x1);
 
-                    if (x1 >= mChart.getxAxis().getStartPos().x &&
-                            x1 <= mChart.getxAxis().getEndPos().x) {
+                    if (x1 >= mChart.getXAxis().getStartPos().x &&
+                            x1 <= mChart.getXAxis().getEndPos().x) {
                         canvas.drawRect(x1 + DEFAULT_BAR_WIDTH, y1, x2, y2, mGraphPaint);
                     }
                 }

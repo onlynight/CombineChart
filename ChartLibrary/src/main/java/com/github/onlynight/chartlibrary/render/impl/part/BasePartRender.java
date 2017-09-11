@@ -1,4 +1,4 @@
-package com.github.onlynight.chartlibrary.render.part.impl;
+package com.github.onlynight.chartlibrary.render.impl.part;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -49,8 +49,8 @@ public abstract class BasePartRender implements IPartRender {
                 if (temp instanceof BaseChartData) {
                     BaseChartData data = (BaseChartData) temp;
                     BaseChartDataConfig config = data.getConfig();
-                    float chartWidth = mChart.getxAxis().getEndPos().x -
-                            mChart.getxAxis().getStartPos().x;
+                    float chartWidth = mChart.getXAxis().getEndPos().x -
+                            mChart.getXAxis().getStartPos().x;
                     if (config.isAutoWidth()) {
                         if (data.getData() != null &&
                                 data.getData().size() > 0) {
@@ -58,8 +58,8 @@ public abstract class BasePartRender implements IPartRender {
                         }
                     } else {
                         float tempWidth = data.getData().size() * config.getBarWidth();
-                        if (tempWidth < mChart.getxAxis().getEndPos().x -
-                                mChart.getxAxis().getStartPos().x &&
+                        if (tempWidth < mChart.getXAxis().getEndPos().x -
+                                mChart.getXAxis().getStartPos().x &&
                                 data.getData().size() > 0) {
                             isCanZoomLessThanNormal = false;
                             config.setBarWidth(chartWidth / data.getData().size());
@@ -177,16 +177,16 @@ public abstract class BasePartRender implements IPartRender {
     }
 
     private boolean isInChartYRange(PointF point) {
-        float top = mChart.getyAxis().getScales().get(0).getStartPos().y;
-        float bottom = mChart.getyAxis().getScales().get(mChart.getyAxis().getScales().size() - 1).getStartPos().y;
+        float top = mChart.getYAxis().getScales().get(0).getStartPos().y;
+        float bottom = mChart.getYAxis().getScales().get(mChart.getYAxis().getScales().size() - 1).getStartPos().y;
 
         return point.y > top &&
                 point.y < bottom;
     }
 
     private boolean isInChartXRange(PointF point) {
-        float left = mChart.getxAxis().getStartPos().x;
-        float right = mChart.getyAxis().getEndPos().x;
+        float left = mChart.getXAxis().getStartPos().x;
+        float right = mChart.getYAxis().getEndPos().x;
 
         return point.x > left &&
                 point.x < right;
