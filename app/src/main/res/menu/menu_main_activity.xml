@@ -5,6 +5,11 @@
     <item
         android:id="@+id/menuSingleChart"
         android:title="@string/single_chart"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menuChartEx"
+        android:title="@string/chartex"
+        app:showAsAction="never"/>
 
 </menu>

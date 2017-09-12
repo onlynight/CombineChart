@@ -275,7 +275,7 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
         mChart.getYAxis().getEndPos().x = x;
     }
 
-    protected void measureXAxis() {
+    private void measureXAxis() {
         mTextPaint.setTextSize(mChart.getXAxis().getTextSize());
         mGraphPaint.setStrokeWidth(mChart.getXAxis().getWidth());
 
@@ -605,32 +605,12 @@ public class BaseChartRender<Data extends BaseChartData, PartRender extends IPar
 
     @Override
     public double getYMaxValue() {
-        double max = Double.MIN_VALUE;
-        for (Object obj : mChart.getDataList()) {
-            if (obj instanceof BaseChartData) {
-                double temp = ((BaseChartData) obj).getYMax();
-                if (temp > max) {
-                    max = temp;
-                }
-            }
-        }
-
-        return max;
+        return mChart.getYMaxValue();
     }
 
     @Override
     public double getYMinValue() {
-        double min = Double.MAX_VALUE;
-        for (Object obj : mChart.getDataList()) {
-            if (obj instanceof BaseChartData) {
-                double temp = ((BaseChartData) obj).getYMin();
-                if (temp < min) {
-                    min = temp;
-                }
-            }
-        }
-
-        return min;
+        return mChart.getYMinValue();
     }
 
     private void drawBorder(Canvas canvas) {

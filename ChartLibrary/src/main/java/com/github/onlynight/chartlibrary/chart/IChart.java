@@ -88,4 +88,7 @@ public interface IChart<T extends BaseChartData> extends IChartOperate {
 
     void addData(T data);
 
+    double getYMaxValue();
+
+    double getYMinValue();
 }

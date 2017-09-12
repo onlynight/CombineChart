@@ -292,6 +292,36 @@ public class BaseChart<T extends BaseChartData, Render extends IChartRender> imp
         }
     }
 
+    @Override
+    public double getYMaxValue() {
+        double max = Double.MIN_VALUE;
+        for (Object obj : getDataList()) {
+            if (obj instanceof BaseChartData) {
+                double temp = ((BaseChartData) obj).getYMax();
+                if (temp > max) {
+                    max = temp;
+                }
+            }
+        }
+
+        return max;
+    }
+
+    @Override
+    public double getYMinValue() {
+        double min = Double.MAX_VALUE;
+        for (Object obj : getDataList()) {
+            if (obj instanceof BaseChartData) {
+                double temp = ((BaseChartData) obj).getYMin();
+                if (temp < min) {
+                    min = temp;
+                }
+            }
+        }
+
+        return min;
+    }
+
     public void setExtremeValue(T data) {
         double max = Double.MIN_VALUE, min = Double.MAX_VALUE;
         int maxIndex = 0, minIndex = 0;

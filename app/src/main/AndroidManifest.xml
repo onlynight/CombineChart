@@ -21,6 +21,8 @@
         </activity>
         <activity android:name=".SingleChartListActivity">
         </activity>
+        <activity android:name=".ChartExActivity">
+        </activity>
     </application>
 
 </manifest>
